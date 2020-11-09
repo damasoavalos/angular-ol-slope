@@ -17,10 +17,7 @@ export class OlmapComponent implements OnInit {
   // constructor() { }
 
   ngOnInit(): void {
-    this.main();
-  }
 
-  main() {
     var raster = new TileLayer({
       source: new OSM(),
     });
