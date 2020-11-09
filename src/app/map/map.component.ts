@@ -22,8 +22,8 @@ export class MapComponent implements OnInit {
       ],
       target: 'map',
       view: new View({
-        center: Proj.transform([-0.12755, 51.507222], 'EPSG:4326', 'EPSG:3857'),
-        zoom: 3
+        center: Proj.transform([-99.23, 50.79], 'EPSG:4326', 'EPSG:3857'),
+        zoom: 4
       })
     });
   }
