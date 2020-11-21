@@ -11,30 +11,30 @@ import ZoomSlider from 'ol/control/ZoomSlider';
 import { DrawLineButtonComponent } from '../draw-line-button/draw-line-button.component';
 
 @Component({
-  selector: 'olmap',
+  selector: 'app-ol-map',
   templateUrl: './olmap.component.html',
   styleUrls: ['./olmap.component.css']
 })
 export class OlmapComponent implements OnInit {
 
-  // constructor() { }  
+  // constructor() { }
 
   ngOnInit(): void {
 
-    var raster = new TileLayer({
+    const raster = new TileLayer({
       source: new OSM(),
     });
 
-    var source = new VectorSource({wrapX: false});
+    const source = new VectorSource({wrapX: false});
 
-    var vector = new VectorLayer({
-      source: source,
-    });    
+    const vector = new VectorLayer({
+      source,
+    });
 
-    var map_controls = [new ZoomSlider(), new DrawLineButtonComponent()];    
+    const mapControls = [new ZoomSlider(), new DrawLineButtonComponent()];
 
-    var map = new Map({
-      controls: defaultControls().extend(map_controls),
+    const map = new Map({
+      controls: defaultControls().extend(mapControls),
       layers: [raster, vector],
       target: 'map',
       view: new View({
@@ -44,12 +44,12 @@ export class OlmapComponent implements OnInit {
     });
 
 
-    var draw; // global so we can remove it later
+    let draw; // global so we can remove it later
     draw = new Draw({
-      source: source,
+      source,
       type: GeometryType.LINE_STRING,
     });
-    map.addInteraction(draw);  
+    map.addInteraction(draw);
 
     // var draw; // global so we can remove it later
     // function addInteraction() {
@@ -57,8 +57,8 @@ export class OlmapComponent implements OnInit {
     //     source: source,
     //     type: GeometryType.LINE_STRING,
     //   });
-    //     map.addInteraction(draw);      
-    // }    
+    //     map.addInteraction(draw);
+    // }
 
     // /**
     //  * Handle change event.
@@ -66,6 +66,6 @@ export class OlmapComponent implements OnInit {
     // typeSelect.onchange = function () {
     //   map.removeInteraction(draw);
     //   addInteraction();
-    // };    
+    // };
   }
 }

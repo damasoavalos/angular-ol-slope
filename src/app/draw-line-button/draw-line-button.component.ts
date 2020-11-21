@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import Control from 'ol/control/Control';
 
 @Component({
@@ -9,20 +9,20 @@ import Control from 'ol/control/Control';
 export class DrawLineButtonComponent extends Control {
   constructor() {
       super({});
-      let button = document.createElement('button');
+      const button = document.createElement('button');
       button.type = 'button';
       button.className = 'ol-control';
       button.innerHTML = 'N';
-      let element = document.createElement('div');
+      const element = document.createElement('div');
       element.className = 'ol-feature ol-control';
       element.appendChild(button);
       Control.call(this, {
-          element: element
+          element
       });
       button.addEventListener('click', () => this.click());
   }
 
-  click() {    
-      console.log('click');      
+  click(): void {
+      console.log('click');
   }
 }
