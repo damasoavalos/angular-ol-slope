@@ -12,10 +12,10 @@ import { DrawLineButtonComponent } from '../draw-line-button/draw-line-button.co
 
 @Component({
   selector: 'app-ol-map',
-  templateUrl: './olmap.component.html',
-  styleUrls: ['./olmap.component.css']
+  templateUrl: './ol-map.component.html',
+  styleUrls: ['./ol-map.component.css']
 })
-export class OlmapComponent implements OnInit {
+export class OlMapComponent implements OnInit {
 
   // constructor() { }
 
