@@ -1,7 +1,8 @@
- .ol-draw-line {
+ .draw-line-button {
    position: absolute;
    border-radius: 2px 2px 0 0;
    width: 4.5em;
    left: 0.5em;
    top: 4em;
+   margin: 1px;
  }
