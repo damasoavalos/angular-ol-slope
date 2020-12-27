@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import 'ol/ol.css';
 import Draw from 'ol/interaction/Draw';
 import Map from 'ol/Map';
@@ -15,6 +15,7 @@ import { DrawLineButtonComponent } from '../draw-line-button/draw-line-button.co
   styleUrls: ['./ol-map.component.css']
 })
 export class OlMapComponent implements OnInit {
+  @Input() geometrytype: {type: string};
   map: Map;
   source: VectorSource;
   draw: Draw;
@@ -42,7 +43,7 @@ export class OlMapComponent implements OnInit {
       }),
     });
 
-    this.addInteraction();
+    // this.addInteraction(this.geometrytype);
     // let draw; // global so we can remove it later
     // draw = new Draw({
     //   source: this.source,
@@ -68,10 +69,15 @@ export class OlMapComponent implements OnInit {
     // };
   }
 
-  addInteraction(): void {
+  onDrawLineClicked(): void {
+    console.log(this.geometrytype);
+    this.addInteraction(GeometryType.LINE_STRING);
+  }
+
+  addInteraction(geometryType): void {
     this.draw = new Draw({
       source: this.source,
-      type: GeometryType.LINE_STRING,
+      type: geometryType,
     });
     this.map.addInteraction(this.draw);
   }

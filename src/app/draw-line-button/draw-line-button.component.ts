@@ -1,5 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, Output, EventEmitter} from '@angular/core';
 import Control from 'ol/control/Control';
+// import GeometryType from 'ol/geom/GeometryType';
 
 @Component({
   selector: 'app-draw-line-button',
@@ -8,6 +9,7 @@ import Control from 'ol/control/Control';
 })
 
 export class DrawLineButtonComponent extends Control {
+  @Output() drawLine = new EventEmitter<{Line: string}>();
   constructor() {
       super({});
       const button = document.createElement('button');
@@ -19,10 +21,9 @@ export class DrawLineButtonComponent extends Control {
       button.style.width = '4.5em';
       button.style.left = '.5em';
       button.style.top = '4em';
+      button.style.margin = '1';
       const element = document.createElement('div');
       element.className = 'ol-control';
-      // element.style.width = 'auto';
-      // element.style.position = 'relative';
       element.appendChild(button);
       Control.call(this, {
           element
@@ -32,5 +33,8 @@ export class DrawLineButtonComponent extends Control {
 
   click(): void {
       console.log('click');
+      this.drawLine.emit({
+        Line: 'line'
+      });
   }
 }
