@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import Control from 'ol/control/Control';
+import { DrawInteractionService} from '../draw-interaction.service';
 
 @Component({
   selector: 'app-draw-line-button',
@@ -12,7 +13,7 @@ export class DrawLineButtonComponent extends Control {
   button: HTMLElement;
   element: HTMLElement;
 
-  constructor() {
+  constructor(private drawInteractionService: DrawInteractionService ) {
       super({});
       this.button = document.getElementById('draw-line-button');
       this.element = document.getElementById('ol-draw-line');
@@ -37,6 +38,7 @@ export class DrawLineButtonComponent extends Control {
 
   onclick(): void {
       console.log('click');
+      this.drawInteractionService.sendClickEvent();
       // this.drawLine.emit({
       //   Line: 'line'
       // });

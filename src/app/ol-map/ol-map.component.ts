@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import 'ol/ol.css';
 import Draw from 'ol/interaction/Draw';
 import Map from 'ol/Map';
@@ -8,6 +8,8 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import GeometryType from 'ol/geom/GeometryType';
 import {defaults as defaultControls} from 'ol/control';
 import { DrawLineButtonComponent } from '../draw-line-button/draw-line-button.component';
+import { DrawInteractionService} from '../draw-interaction.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-ol-map',
@@ -15,10 +17,16 @@ import { DrawLineButtonComponent } from '../draw-line-button/draw-line-button.co
   styleUrls: ['./ol-map.component.css']
 })
 export class OlMapComponent implements OnInit {
-  @Input() geometrytype: {type: string};
+  clickEventSubscription: Subscription;
   map: Map;
   source: VectorSource;
   draw: Draw;
+
+  constructor(private drawInteractionService: DrawInteractionService) {
+    this.clickEventSubscription = this.drawInteractionService.getClickEvent().subscribe(() => {
+      this.addInteraction(GeometryType.LINE_STRING);
+    });
+  }
   ngOnInit(): void {
 
     const basemap = new TileLayer({
@@ -31,7 +39,7 @@ export class OlMapComponent implements OnInit {
       source: this.source,
     });
 
-    const mapControls = [new DrawLineButtonComponent()];
+    const mapControls = [new DrawLineButtonComponent(new DrawInteractionService())];
 
     this.map = new Map({
       controls: defaultControls().extend(mapControls),
@@ -69,10 +77,10 @@ export class OlMapComponent implements OnInit {
     // };
   }
 
-  onDrawLineClicked(): void {
-    console.log(this.geometrytype);
-    this.addInteraction(GeometryType.LINE_STRING);
-  }
+  // onDrawLineClicked(): void {
+  //   console.log(this.geometrytype);
+  //   this.addInteraction(GeometryType.LINE_STRING);
+  // }
 
   addInteraction(geometryType): void {
     this.draw = new Draw({
