@@ -12,7 +12,7 @@ export class DrawLineButtonComponent extends Control {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'ol-control';
-      button.innerHTML = 'N';
+      button.innerHTML = 'Polygon';
       const element = document.createElement('div');
       element.className = 'ol-feature ol-control';
       element.appendChild(button);

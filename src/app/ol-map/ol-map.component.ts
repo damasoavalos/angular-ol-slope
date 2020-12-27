@@ -7,7 +7,6 @@ import {OSM, Vector as VectorSource} from 'ol/source';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import GeometryType from 'ol/geom/GeometryType';
 import {defaults as defaultControls} from 'ol/control';
-import ZoomSlider from 'ol/control/ZoomSlider';
 import { DrawLineButtonComponent } from '../draw-line-button/draw-line-button.component';
 
 @Component({
@@ -16,26 +15,26 @@ import { DrawLineButtonComponent } from '../draw-line-button/draw-line-button.co
   styleUrls: ['./ol-map.component.css']
 })
 export class OlMapComponent implements OnInit {
-
-  // constructor() { }
-
+  map: Map;
+  source: VectorSource;
+  draw: Draw;
   ngOnInit(): void {
 
-    const raster = new TileLayer({
+    const basemap = new TileLayer({
       source: new OSM(),
     });
 
-    const source = new VectorSource({wrapX: false});
+    this.source = new VectorSource({wrapX: false});
 
     const vector = new VectorLayer({
-      source,
+      source: this.source,
     });
 
-    const mapControls = [new ZoomSlider(), new DrawLineButtonComponent()];
+    const mapControls = [new DrawLineButtonComponent()];
 
-    const map = new Map({
+    this.map = new Map({
       controls: defaultControls().extend(mapControls),
-      layers: [raster, vector],
+      layers: [basemap, vector],
       target: 'map',
       view: new View({
         center: [-11000000, 4600000],
@@ -43,13 +42,13 @@ export class OlMapComponent implements OnInit {
       }),
     });
 
-
-    let draw; // global so we can remove it later
-    draw = new Draw({
-      source,
-      type: GeometryType.LINE_STRING,
-    });
-    map.addInteraction(draw);
+    this.addInteraction();
+    // let draw; // global so we can remove it later
+    // draw = new Draw({
+    //   source: this.source,
+    //   type: GeometryType.LINE_STRING,
+    // });
+    // this.map.addInteraction(draw);
 
     // var draw; // global so we can remove it later
     // function addInteraction() {
@@ -67,5 +66,13 @@ export class OlMapComponent implements OnInit {
     //   map.removeInteraction(draw);
     //   addInteraction();
     // };
+  }
+
+  addInteraction(): void {
+    this.draw = new Draw({
+      source: this.source,
+      type: GeometryType.LINE_STRING,
+    });
+    this.map.addInteraction(this.draw);
   }
 }
