@@ -1,6 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import 'ol/ol.css';
 import Draw from 'ol/interaction/Draw';
+import {defaults as defaultInteractions} from 'ol/interaction';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import {OSM, Vector as VectorSource} from 'ol/source';
@@ -11,7 +12,7 @@ import { DrawLineButtonComponent } from '../draw-line-button/draw-line-button.co
 import {DrawPolygonButtonComponent} from '../draw-polygon-button/draw-polygon-button.component';
 import { DrawInteractionService} from '../draw-interaction.service';
 import {Subscription} from 'rxjs';
-
+import * as OLUtil from 'ol/util';
 
 @Component({
   selector: 'app-ol-map',
@@ -51,6 +52,7 @@ export class OlMapComponent implements OnInit {
                          new DrawPolygonButtonComponent(new DrawInteractionService())];
 
     this.map = new Map({
+      interactions: defaultInteractions({ doubleClickZoom: false }),
       controls: defaultControls().extend(mapControls),
       layers: [basemap, vector],
       target: 'map',
@@ -59,6 +61,10 @@ export class OlMapComponent implements OnInit {
         zoom: 4,
       }),
     });
+    console.log('OpenLayers Version: ', OLUtil.VERSION);
+    // vector.getSource().on('addfeature', (event) => {
+    //   this.RemoveInteraction();
+    // });
   }
 
   RemoveInteraction(): void {
@@ -71,5 +77,8 @@ export class OlMapComponent implements OnInit {
       type: geometryType,
     });
     this.map.addInteraction(this.draw);
+    this.draw.on('drawend', () => {
+      this.map.removeInteraction(this.draw);
+    });
   }
 }
