@@ -9,38 +9,14 @@ import { DrawInteractionService} from '../draw-interaction.service';
 })
 
 export class DrawLineButtonComponent extends Control {
-  // @Output() drawLine = new EventEmitter<{Line: string}>();
-  button: HTMLElement;
-  element: HTMLElement;
 
   constructor(private drawInteractionService: DrawInteractionService ) {
-      super({});
-      this.button = document.getElementById('draw-line-button');
-      this.element = document.getElementById('ol-draw-line');
-      // const button = document.createElement('button');
-      // button.type = 'button';
-      // button.className = 'draw-line-button';
-      // button.innerHTML = 'Polygon';
-      // button.style.position = 'absolute';
-      // button.style.borderRadius = '2px 2px 0 0';
-      // button.style.width = '4.5em';
-      // button.style.left = '.5em';
-      // button.style.top = '4em';
-      // button.style.margin = '1';
-      // const element = document.createElement('div');
-      // element.className = 'ol-control';
-      // element.appendChild(button);
-      Control.call(this, {
-          element: this.element
-      });
-      // this.button.addEventListener('click', () => this.click());
+    super({
+      element: document.getElementById('ol-draw-line')
+    });
   }
 
-  onclick(): void {
-      console.log('click');
-      this.drawInteractionService.sendClickEvent();
-      // this.drawLine.emit({
-      //   Line: 'line'
-      // });
+  onDrawLineClick(): void {
+    this.drawInteractionService.sendClickDrawLine();
   }
 }

@@ -8,8 +8,10 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import GeometryType from 'ol/geom/GeometryType';
 import {defaults as defaultControls} from 'ol/control';
 import { DrawLineButtonComponent } from '../draw-line-button/draw-line-button.component';
+import {DrawPolygonButtonComponent} from '../draw-polygon-button/draw-polygon-button.component';
 import { DrawInteractionService} from '../draw-interaction.service';
 import {Subscription} from 'rxjs';
+
 
 @Component({
   selector: 'app-ol-map',
@@ -17,14 +19,20 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./ol-map.component.css']
 })
 export class OlMapComponent implements OnInit {
-  clickEventSubscription: Subscription;
+  clickDrawLineEventSubscription: Subscription;
+  clickDrawPolygonEventSubscription: Subscription;
   map: Map;
   source: VectorSource;
   draw: Draw;
 
   constructor(private drawInteractionService: DrawInteractionService) {
-    this.clickEventSubscription = this.drawInteractionService.getClickEvent().subscribe(() => {
+    this.clickDrawLineEventSubscription = this.drawInteractionService.getClickDrawLine().subscribe(() => {
+      this.RemoveInteraction();
       this.addInteraction(GeometryType.LINE_STRING);
+    });
+    this.clickDrawPolygonEventSubscription = this.drawInteractionService.getClickDrawPolygon().subscribe(() => {
+      this.RemoveInteraction();
+      this.addInteraction(GeometryType.POLYGON);
     });
   }
   ngOnInit(): void {
@@ -39,7 +47,8 @@ export class OlMapComponent implements OnInit {
       source: this.source,
     });
 
-    const mapControls = [new DrawLineButtonComponent(new DrawInteractionService())];
+    const mapControls = [new DrawLineButtonComponent(new DrawInteractionService()),
+                         new DrawPolygonButtonComponent(new DrawInteractionService())];
 
     this.map = new Map({
       controls: defaultControls().extend(mapControls),
@@ -50,37 +59,11 @@ export class OlMapComponent implements OnInit {
         zoom: 4,
       }),
     });
-
-    // this.addInteraction(this.geometrytype);
-    // let draw; // global so we can remove it later
-    // draw = new Draw({
-    //   source: this.source,
-    //   type: GeometryType.LINE_STRING,
-    // });
-    // this.map.addInteraction(draw);
-
-    // var draw; // global so we can remove it later
-    // function addInteraction() {
-    //   draw = new Draw({
-    //     source: source,
-    //     type: GeometryType.LINE_STRING,
-    //   });
-    //     map.addInteraction(draw);
-    // }
-
-    // /**
-    //  * Handle change event.
-    //  */
-    // typeSelect.onchange = function () {
-    //   map.removeInteraction(draw);
-    //   addInteraction();
-    // };
   }
 
-  // onDrawLineClicked(): void {
-  //   console.log(this.geometrytype);
-  //   this.addInteraction(GeometryType.LINE_STRING);
-  // }
+  RemoveInteraction(): void {
+    this.map.removeInteraction(this.draw);
+  }
 
   addInteraction(geometryType): void {
     this.draw = new Draw({

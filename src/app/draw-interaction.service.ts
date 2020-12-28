@@ -5,12 +5,20 @@ import {Observable, Subject} from 'rxjs';
   providedIn: 'root'
 })
 export class DrawInteractionService {
-  private subject = new Subject<any>();
+  private subjectDrawLine = new Subject<any>();
+  private subjectDrawPolygon = new Subject<any>();
 
-  sendClickEvent(): void {
-    this.subject.next();
+  sendClickDrawLine(): void {
+    this.subjectDrawLine.next();
   }
-  getClickEvent(): Observable<any>{
-    return this.subject.asObservable();
+  getClickDrawLine(): Observable<any>{
+    return this.subjectDrawLine.asObservable();
+  }
+
+  sendClickDrawPolygon(): void {
+    this.subjectDrawPolygon.next();
+  }
+  getClickDrawPolygon(): Observable<any>{
+    return this.subjectDrawPolygon.asObservable();
   }
 }
