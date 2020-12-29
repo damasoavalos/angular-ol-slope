@@ -25,62 +25,69 @@ export class OlMapComponent implements OnInit {
   clickDrawPolygonEventSubscription: Subscription;
   clickDrawOuterRingEventSubscription: Subscription;
   map: Map;
-  source: VectorSource;
+  innerVectorSource: VectorSource;
+  outerVectorSource: VectorSource;
+  innerVectorLayer: VectorLayer;
+  outerVectorLayer: VectorLayer;
   draw: Draw;
-  vector: VectorLayer;
   select: Select;
   featureToDelete: any;
 
   constructor(private drawInteractionService: DrawInteractionService) {
+    // subscription to click events from draw buttons
     this.clickDrawLineEventSubscription = this.drawInteractionService.getClickDrawLine().subscribe(() => {
-      this.addInteraction(GeometryType.LINE_STRING);
+      this.addInteraction(GeometryType.LINE_STRING, this.innerVectorSource);
     });
     this.clickDrawPolygonEventSubscription = this.drawInteractionService.getClickDrawPolygon().subscribe(() => {
-      this.addInteraction(GeometryType.POLYGON);
+      this.addInteraction(GeometryType.POLYGON, this.innerVectorSource);
     });
     this.clickDrawOuterRingEventSubscription = this.drawInteractionService.getClickDrawOuterRing().subscribe(() => {
-      this.addInteraction(GeometryType.POLYGON);
+      this.addInteraction(GeometryType.POLYGON, this.outerVectorSource);
     });
   }
   ngOnInit(): void {
 
+    // layers definition
     const basemap = new TileLayer({
       source: new OSM(),
     });
-
-    this.source = new VectorSource({wrapX: false});
-
-    this.vector = new VectorLayer({
-      source: this.source,
+    this.innerVectorSource = new VectorSource({wrapX: false});
+    this.innerVectorLayer = new VectorLayer({
+      source: this.innerVectorSource,
+    });
+    this.outerVectorSource = new VectorSource({wrapX: false});
+    this.outerVectorLayer = new VectorLayer({
+      source: this.outerVectorSource,
     });
 
-    this.select = new Select();
+    // contextmenu
     const deleteIcon = 'https://cdn.iconscout.com/icon/free/png-32/delete-726-458722.png';
     const contextmenuItems = [{
       text: 'Delete',
       classname: 'marker',
       icon: deleteIcon,
       callback: (() => {
-          this.source.removeFeature(this.featureToDelete);
+          this.innerVectorSource.removeFeature(this.featureToDelete);
       })
     },
       '-' // this is a separator
     ];
-
     const contextmenu = new ContextMenu({
       width: 180,
       defaultItems: true,
       items: contextmenuItems
     });
+
+    // mapcontrols
     const mapControls = [new DrawLineButtonComponent(new DrawInteractionService()),
                          new DrawPolygonButtonComponent(new DrawInteractionService()),
                          new DrawOuterRingComponent(new DrawInteractionService()),
                          contextmenu];
-
+    this.select = new Select();
     this.map = new Map({
       interactions: defaultInteractions({ doubleClickZoom: false }).extend([this.select]),
       controls: defaultControls().extend(mapControls),
-      layers: [basemap, this.vector],
+      layers: [basemap, this.innerVectorLayer, this.outerVectorLayer],
       target: 'map',
       view: new View({
         center: [-11000000, 4600000],
@@ -88,6 +95,7 @@ export class OlMapComponent implements OnInit {
       }),
     });
 
+    // making sure contextmenu open only on features select
     contextmenu.on('beforeopen', (evt) => {
       const feature = this.map.forEachFeatureAtPixel(evt.pixel, (ft) => {
         return ft;
@@ -105,9 +113,9 @@ export class OlMapComponent implements OnInit {
   //   this.map.removeInteraction(this.draw);
   // }
 
-  addInteraction(geometryType): void {
+  addInteraction(geometryType, vectorSource): void {
     this.draw = new Draw({
-      source: this.source,
+      source: vectorSource,
       type: geometryType,
     });
     this.map.addInteraction(this.draw);
