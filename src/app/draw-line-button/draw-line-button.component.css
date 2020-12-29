@@ -1,8 +1,8 @@
  .draw-line-button {
    position: absolute;
    border-radius: 2px 2px 0 0;
-   width: 4.5em;
-   left: 0.5em;
-   top: 4em;
+   width: 80px;
+   left: 10px;
+   top: 90px;
    margin: 1px;
  }
