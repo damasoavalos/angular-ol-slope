@@ -7,6 +7,7 @@ import { MapComponent } from './map/map.component';
 import { OlMapComponent } from './ol-map/ol-map.component';
 import { DrawLineButtonComponent } from './draw-line-button/draw-line-button.component';
 import { DrawPolygonButtonComponent } from './draw-polygon-button/draw-polygon-button.component';
+import { DrawOuterRingComponent } from './draw-outer-ring/draw-outer-ring.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { DrawPolygonButtonComponent } from './draw-polygon-button/draw-polygon-b
     MapComponent,
     OlMapComponent,
     DrawLineButtonComponent,
-    DrawPolygonButtonComponent
+    DrawPolygonButtonComponent,
+    DrawOuterRingComponent
   ],
   imports: [
     BrowserModule,

@@ -7,6 +7,7 @@ import {Observable, Subject} from 'rxjs';
 export class DrawInteractionService {
   private subjectDrawLine = new Subject<any>();
   private subjectDrawPolygon = new Subject<any>();
+  private subjectDrawOuterRing = new Subject<any>();
 
   sendClickDrawLine(): void {
     this.subjectDrawLine.next();
@@ -20,5 +21,12 @@ export class DrawInteractionService {
   }
   getClickDrawPolygon(): Observable<any>{
     return this.subjectDrawPolygon.asObservable();
+  }
+
+  sendClickDrawOuterRing(): void {
+    this.subjectDrawOuterRing.next();
+  }
+  getClickDrawOuterRing(): Observable<any>{
+    return this.subjectDrawOuterRing.asObservable();
   }
 }

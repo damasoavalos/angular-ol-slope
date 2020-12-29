@@ -11,6 +11,7 @@ import {defaults as defaultControls} from 'ol/control';
 import ContextMenu from 'ol-contextmenu';
 import { DrawLineButtonComponent } from '../draw-line-button/draw-line-button.component';
 import {DrawPolygonButtonComponent} from '../draw-polygon-button/draw-polygon-button.component';
+import {DrawOuterRingComponent} from '../draw-outer-ring/draw-outer-ring.component';
 import { DrawInteractionService} from '../draw-interaction.service';
 import {Subscription} from 'rxjs';
 
@@ -22,6 +23,7 @@ import {Subscription} from 'rxjs';
 export class OlMapComponent implements OnInit {
   clickDrawLineEventSubscription: Subscription;
   clickDrawPolygonEventSubscription: Subscription;
+  clickDrawOuterRingEventSubscription: Subscription;
   map: Map;
   source: VectorSource;
   draw: Draw;
@@ -34,6 +36,9 @@ export class OlMapComponent implements OnInit {
       this.addInteraction(GeometryType.LINE_STRING);
     });
     this.clickDrawPolygonEventSubscription = this.drawInteractionService.getClickDrawPolygon().subscribe(() => {
+      this.addInteraction(GeometryType.POLYGON);
+    });
+    this.clickDrawOuterRingEventSubscription = this.drawInteractionService.getClickDrawOuterRing().subscribe(() => {
       this.addInteraction(GeometryType.POLYGON);
     });
   }
@@ -69,6 +74,7 @@ export class OlMapComponent implements OnInit {
     });
     const mapControls = [new DrawLineButtonComponent(new DrawInteractionService()),
                          new DrawPolygonButtonComponent(new DrawInteractionService()),
+                         new DrawOuterRingComponent(new DrawInteractionService()),
                          contextmenu];
 
     this.map = new Map({
