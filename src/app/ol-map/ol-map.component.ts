@@ -4,8 +4,10 @@ import Draw from 'ol/interaction/Draw';
 import {defaults as defaultInteractions, Select} from 'ol/interaction';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import {OSM, Vector as VectorSource} from 'ol/source';
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
+import {OSM} from 'ol/source';
+import VectorSource from 'ol/source/Vector';
+import TileLayer from 'ol/layer/Tile';
+import VectorLayer from 'ol/layer/Vector';
 import GeometryType from 'ol/geom/GeometryType';
 import {defaults as defaultControls} from 'ol/control';
 import ContextMenu from 'ol-contextmenu';
@@ -34,7 +36,7 @@ export class OlMapComponent implements OnInit {
   draw: Draw;
   select: Select;
   featureToDelete: any;
-  selectedFeatureID: string;
+  selectedFeatureID: number | string;
 
   constructor(private drawInteractionService: DrawInteractionService) {
     // subscription to click events from draw buttons
@@ -91,11 +93,11 @@ export class OlMapComponent implements OnInit {
       icon: deleteIcon,
       callback: (() =>
       {
-        const innerFeature = this.innerVectorSource.getFeatures().filter(ft => ft.getProperties().id === this.selectedFeatureID)[0];
+        const innerFeature = this.innerVectorSource.getFeatureById(this.selectedFeatureID);
         if (innerFeature) {
           this.innerVectorSource.removeFeature(innerFeature);
         }
-        const outerFeature = this.outerVectorSource.getFeatures().filter(ft => ft.getProperties().id === this.selectedFeatureID)[0];
+        const outerFeature = this.outerVectorSource.getFeatureById(this.selectedFeatureID);
         if (outerFeature) {
           this.outerVectorSource.removeFeature(outerFeature);
         }
@@ -135,7 +137,7 @@ export class OlMapComponent implements OnInit {
 
       if (feature) { // open only on features
         // next line belong to contextmenu "delete" feature
-        this.selectedFeatureID = feature.getProperties().id;
+        this.selectedFeatureID = feature.getId();
 
         contextmenu.enable();
       } else {
@@ -144,10 +146,6 @@ export class OlMapComponent implements OnInit {
     });
   }
 
-  // RemoveInteraction(): void {
-  //   this.map.removeInteraction(this.draw);
-  // }
-
   addInteraction(geometryType, vectorSource): void {
     this.draw = new Draw({
       source: vectorSource,
@@ -155,9 +153,7 @@ export class OlMapComponent implements OnInit {
     });
     this.map.addInteraction(this.draw);
     this.draw.on('drawend', (event) => {
-      event.feature.setProperties({
-        id: uuid()
-      });
+      event.feature.setId(uuid());
       this.map.removeInteraction(this.draw);
     });
   }
