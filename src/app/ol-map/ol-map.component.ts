@@ -18,6 +18,7 @@ import {DrawInteractionService} from '../draw-interaction.service';
 import {Subscription} from 'rxjs';
 import {Fill, Stroke, Style} from 'ol/style';
 import { v4 as uuid } from 'uuid';
+import {ClearButtonComponent} from '../clear-button/clear-button.component';
 
 @Component({
   selector: 'app-ol-map',
@@ -28,6 +29,7 @@ export class OlMapComponent implements OnInit {
   clickDrawLineEventSubscription: Subscription;
   clickDrawPolygonEventSubscription: Subscription;
   clickDrawOuterRingEventSubscription: Subscription;
+  clickClearEventSubscription: Subscription;
   innerVectorSource: VectorSource;
   outerVectorSource: VectorSource;
   innerVectorLayer: VectorLayer;
@@ -48,6 +50,10 @@ export class OlMapComponent implements OnInit {
     });
     this.clickDrawOuterRingEventSubscription = this.drawInteractionService.getClickDrawOuterRing().subscribe(() => {
       this.addInteraction(GeometryType.POLYGON, this.outerVectorSource);
+    });
+    this.clickClearEventSubscription = this.drawInteractionService.getClickClear().subscribe(() => {
+      this.innerVectorSource.clear();
+      this.outerVectorSource.clear();
     });
   }
   ngOnInit(): void {
@@ -115,6 +121,7 @@ export class OlMapComponent implements OnInit {
     const mapControls = [new LineButtonComponent(new DrawInteractionService()),
                          new PolygonButtonComponent(new DrawInteractionService()),
                          new OuterRingButtonComponent(new DrawInteractionService()),
+                         new ClearButtonComponent(new DrawInteractionService()),
                          contextmenu];
 
     this.select = new Select();

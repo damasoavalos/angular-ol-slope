@@ -8,6 +8,7 @@ export class DrawInteractionService {
   private subjectDrawLine = new Subject<any>();
   private subjectDrawPolygon = new Subject<any>();
   private subjectDrawOuterRing = new Subject<any>();
+  private subjectClear = new Subject<any>();
 
   sendClickDrawLine(): void {
     this.subjectDrawLine.next();
@@ -28,5 +29,12 @@ export class DrawInteractionService {
   }
   getClickDrawOuterRing(): Observable<any>{
     return this.subjectDrawOuterRing.asObservable();
+  }
+
+  sendClickClear(): void {
+    this.subjectClear.next();
+  }
+  getClickClear(): Observable<any>{
+    return this.subjectClear.asObservable();
   }
 }

@@ -1,6 +1,6 @@
-import { Component} from '@angular/core';
+import {Component} from '@angular/core';
 import Control from 'ol/control/Control';
-import { DrawInteractionService} from '../draw-interaction.service';
+import {DrawInteractionService} from '../draw-interaction.service';
 
 @Component({
   selector: 'app-outer-ring',
@@ -18,5 +18,4 @@ export class OuterRingButtonComponent extends Control {
   onDrawOuterRingClick(): void {
     this.drawInteractionService.sendClickDrawOuterRing();
   }
-
 }
