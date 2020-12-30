@@ -21,11 +21,11 @@ import { v4 as uuid } from 'uuid';
 import {ClearButtonComponent} from '../clear-button/clear-button.component';
 
 @Component({
-  selector: 'app-ol-map',
-  templateUrl: './ol-map.component.html',
-  styleUrls: ['./ol-map.component.css']
+  selector: 'app-map',
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.css']
 })
-export class OlMapComponent implements OnInit {
+export class MapComponent implements OnInit {
   clickDrawLineEventSubscription: Subscription;
   clickDrawPolygonEventSubscription: Subscription;
   clickDrawOuterRingEventSubscription: Subscription;
