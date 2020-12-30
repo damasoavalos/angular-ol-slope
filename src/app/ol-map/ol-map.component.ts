@@ -14,6 +14,7 @@ import {DrawPolygonButtonComponent} from '../draw-polygon-button/draw-polygon-bu
 import {DrawOuterRingComponent} from '../draw-outer-ring/draw-outer-ring.component';
 import { DrawInteractionService} from '../draw-interaction.service';
 import {Subscription} from 'rxjs';
+import {Fill, Stroke, Style} from 'ol/style';
 
 @Component({
   selector: 'app-ol-map',
@@ -52,12 +53,32 @@ export class OlMapComponent implements OnInit {
       source: new OSM(),
     });
     this.innerVectorSource = new VectorSource({wrapX: false});
+    const innerRingColor = 'rgba(79, 79, 79, 1)';
     this.innerVectorLayer = new VectorLayer({
       source: this.innerVectorSource,
+      style: new Style({
+        fill: new Fill({
+          color: innerRingColor,
+        }),
+        stroke: new Stroke({
+          color: innerRingColor,
+          width: 3,
+        }),
+      })
     });
     this.outerVectorSource = new VectorSource({wrapX: false});
+    const outerRingColor = 'rgba(0, 255, 0, 0.8)';
     this.outerVectorLayer = new VectorLayer({
       source: this.outerVectorSource,
+      style: new Style({
+        fill: new Fill({
+          color: outerRingColor,
+        }),
+        stroke: new Stroke({
+          color: outerRingColor,
+          width: 1,
+        }),
+      })
     });
 
     // contextmenu
@@ -87,7 +108,7 @@ export class OlMapComponent implements OnInit {
     this.map = new Map({
       interactions: defaultInteractions({ doubleClickZoom: false }).extend([this.select]),
       controls: defaultControls().extend(mapControls),
-      layers: [basemap, this.innerVectorLayer, this.outerVectorLayer],
+      layers: [basemap, this.outerVectorLayer, this.innerVectorLayer],
       target: 'map',
       view: new View({
         center: [-11000000, 4600000],
