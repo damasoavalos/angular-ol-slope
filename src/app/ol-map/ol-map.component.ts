@@ -34,6 +34,7 @@ export class OlMapComponent implements OnInit {
   draw: Draw;
   select: Select;
   featureToDelete: any;
+  selectedFeatureID: string;
 
   constructor(private drawInteractionService: DrawInteractionService) {
     // subscription to click events from draw buttons
@@ -88,8 +89,16 @@ export class OlMapComponent implements OnInit {
       text: 'Delete',
       classname: 'marker',
       icon: deleteIcon,
-      callback: (() => {
-          this.innerVectorSource.removeFeature(this.featureToDelete);
+      callback: (() =>
+      {
+        const innerFeature = this.innerVectorSource.getFeatures().filter(ft => ft.getProperties().id === this.selectedFeatureID)[0];
+        if (innerFeature) {
+          this.innerVectorSource.removeFeature(innerFeature);
+        }
+        const outerFeature = this.outerVectorSource.getFeatures().filter(ft => ft.getProperties().id === this.selectedFeatureID)[0];
+        if (outerFeature) {
+          this.outerVectorSource.removeFeature(outerFeature);
+        }
       })
     },
       '-' // this is a separator
@@ -123,8 +132,11 @@ export class OlMapComponent implements OnInit {
       const feature = this.map.forEachFeatureAtPixel(evt.pixel, (ft) => {
         return ft;
       });
-      this.featureToDelete = feature;
+
       if (feature) { // open only on features
+        // next line belong to contextmenu "delete" feature
+        this.selectedFeatureID = feature.getProperties().id;
+
         contextmenu.enable();
       } else {
         contextmenu.disable();
