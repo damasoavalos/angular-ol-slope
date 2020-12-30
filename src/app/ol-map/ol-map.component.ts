@@ -13,7 +13,7 @@ import {defaults as defaultControls} from 'ol/control';
 import ContextMenu from 'ol-contextmenu';
 import {LineButtonComponent} from '../line-button/line-button.component';
 import {PolygonButtonComponent} from '../polygon-button/polygon-button.component';
-import {OuterRingComponent} from '../outer-ring/outer-ring.component';
+import {OuterRingButtonComponent} from '../outer-ring-button/outer-ring-button.component';
 import {DrawInteractionService} from '../draw-interaction.service';
 import {Subscription} from 'rxjs';
 import {Fill, Stroke, Style} from 'ol/style';
@@ -114,7 +114,7 @@ export class OlMapComponent implements OnInit {
     // mapcontrols
     const mapControls = [new LineButtonComponent(new DrawInteractionService()),
                          new PolygonButtonComponent(new DrawInteractionService()),
-                         new OuterRingComponent(new DrawInteractionService()),
+                         new OuterRingButtonComponent(new DrawInteractionService()),
                          contextmenu];
 
     this.select = new Select();

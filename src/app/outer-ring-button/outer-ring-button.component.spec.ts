@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OuterRingComponent } from './outer-ring.component';
+import { OuterRingButtonComponent } from './outer-ring-button.component';
 
-describe('OuterRingComponent', () => {
-  let component: OuterRingComponent;
-  let fixture: ComponentFixture<OuterRingComponent>;
+describe('OuterRingButtonComponent', () => {
+  let component: OuterRingButtonComponent;
+  let fixture: ComponentFixture<OuterRingButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OuterRingComponent ]
+      declarations: [ OuterRingButtonComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OuterRingComponent);
+    fixture = TestBed.createComponent(OuterRingButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

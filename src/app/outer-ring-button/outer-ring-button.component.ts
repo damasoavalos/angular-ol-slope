@@ -4,10 +4,10 @@ import { DrawInteractionService} from '../draw-interaction.service';
 
 @Component({
   selector: 'app-outer-ring',
-  templateUrl: './outer-ring.component.html',
-  styleUrls: ['./outer-ring.component.css']
+  templateUrl: './outer-ring-button.component.html',
+  styleUrls: ['./outer-ring-button.component.css']
 })
-export class OuterRingComponent extends Control {
+export class OuterRingButtonComponent extends Control {
 
   constructor(private drawInteractionService: DrawInteractionService ) {
     super({

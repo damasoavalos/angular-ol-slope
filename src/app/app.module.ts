@@ -3,20 +3,18 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MapComponent } from './map/map.component';
 import { OlMapComponent } from './ol-map/ol-map.component';
 import { LineButtonComponent } from './line-button/line-button.component';
 import { PolygonButtonComponent } from './polygon-button/polygon-button.component';
-import { OuterRingComponent } from './outer-ring/outer-ring.component';
+import { OuterRingButtonComponent } from './outer-ring-button/outer-ring-button.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MapComponent,
     OlMapComponent,
     LineButtonComponent,
     PolygonButtonComponent,
-    OuterRingComponent
+    OuterRingButtonComponent
   ],
   imports: [
     BrowserModule,
