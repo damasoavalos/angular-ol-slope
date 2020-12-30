@@ -1,24 +1,30 @@
 import { Component, OnInit} from '@angular/core';
 import 'ol/ol.css';
+import 'ol-layerswitcher/dist/ol-layerswitcher.css';
 import Draw from 'ol/interaction/Draw';
 import {defaults as defaultInteractions, Select} from 'ol/interaction';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import {OSM} from 'ol/source';
+// import OSMSource from 'ol/source/OSM';
+// import StamenSource from 'ol/source/Stamen';
 import VectorSource from 'ol/source/Vector';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
+// import XYZLayer from 'ol/source/XYZ';
+import GroupLayer from 'ol/layer/Group';
 import GeometryType from 'ol/geom/GeometryType';
 import {defaults as defaultControls} from 'ol/control';
 import ContextMenu from 'ol-contextmenu';
 import {LineButtonComponent} from '../line-button/line-button.component';
 import {PolygonButtonComponent} from '../polygon-button/polygon-button.component';
 import {OuterRingButtonComponent} from '../outer-ring-button/outer-ring-button.component';
+import {ClearButtonComponent} from '../clear-button/clear-button.component';
 import {DrawInteractionService} from '../draw-interaction.service';
 import {Subscription} from 'rxjs';
 import {Fill, Stroke, Style} from 'ol/style';
 import { v4 as uuid } from 'uuid';
-import {ClearButtonComponent} from '../clear-button/clear-button.component';
+import LayerSwitcher, {Options as LsOptions, GroupSelectStyle, BaseLayerOptions, GroupLayerOptions} from 'ol-layerswitcher';
+import {TileImage} from 'ol/source';
 
 @Component({
   selector: 'app-map',
@@ -58,10 +64,76 @@ export class MapComponent implements OnInit {
   }
   ngOnInit(): void {
 
+    // ** extra basemaps, wanna keep it for now ** //
     // layers definition
-    const basemap = new TileLayer({
-      source: new OSM(),
-    });
+    // const basemap = new TileLayer({
+    //   source: new OSM(),
+    // });
+    //
+    // const osm = new TileLayer({
+    //   title: 'OSM',
+    //   type: 'base',
+    //   visible: false,
+    //   source: new OSMSource()
+    // } as BaseLayerOptions);
+    //
+    // const worldImagery = new TileLayer({
+    //   title: 'Satellite',
+    //   type: 'base',
+    //   visible: true,
+    //   source: new XYZLayer({
+    //     url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    //     maxZoom: 19
+    //   })
+    // } as BaseLayerOptions);
+    //
+    // const googleLayerTerrain = new TileLayer({
+    //   title: 'Google Terrain',
+    //   type: 'base',
+    //   visible: false,
+    //   source: new TileImage({url: 'http://mt1.google.com/vt/lyrs=t&x={x}&y={y}&z={z}'})
+    // } as BaseLayerOptions);
+    //
+    // const googleLayerRoadNames = new TileLayer({
+    //   title: 'Google Road Names',
+    //   type: 'base',
+    //   visible: false,
+    //   source: new TileImage({url: 'http://mt1.google.com/vt/lyrs=h&x={x}&y={y}&z={z}'})
+    // } as BaseLayerOptions);
+    //
+    // const googleLayerRoadmap = new TileLayer({
+    //   title: 'Google Road Map',
+    //   type: 'base',
+    //   visible: false,
+    //   source: new TileImage({url: 'http://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'})
+    // } as BaseLayerOptions);
+    //
+    // const googleLayerSatellite = new TileLayer({
+    //   title: 'Google Satellite',
+    //   type: 'base',
+    //   visible: false,
+    //   source: new TileImage({url: 'http://mt1.google.com/vt/lyrs=s&hl=pl&&x={x}&y={y}&z={z}'})
+    // } as BaseLayerOptions);
+
+    const googleSatelliteRoads = new TileLayer({
+      title: 'Google Satellite & Roads',
+      type: 'base',
+      visible: true,
+      source: new TileImage({url: 'http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'})
+    } as BaseLayerOptions);
+
+    const googleTerrainRoads = new TileLayer({
+      title: 'Google Terrain & Roads',
+      type: 'base',
+      visible: false,
+      source: new TileImage({url: 'http://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'})
+    } as BaseLayerOptions);
+
+    const baseMaps = new GroupLayer({
+      title: 'Base maps',
+      layers: [googleSatelliteRoads, googleTerrainRoads]
+    } as GroupLayerOptions);
+
     this.innerVectorSource = new VectorSource({wrapX: false});
     const innerRingColor = 'rgba(79, 79, 79, 1)';
     this.innerVectorLayer = new VectorLayer({
@@ -117,18 +189,28 @@ export class MapComponent implements OnInit {
       items: contextmenuItems
     });
 
+    const groupStyle: GroupSelectStyle = 'group';
+
+    const opts: LsOptions = {
+      reverse: false,
+      groupSelectStyle: groupStyle,
+      startActive: false,
+      activationMode: 'click'
+    };
+
     // mapcontrols
     const mapControls = [new LineButtonComponent(new DrawInteractionService()),
                          new PolygonButtonComponent(new DrawInteractionService()),
                          new OuterRingButtonComponent(new DrawInteractionService()),
                          new ClearButtonComponent(new DrawInteractionService()),
+                         new LayerSwitcher(opts),
                          contextmenu];
 
     this.select = new Select();
     this.map = new Map({
       interactions: defaultInteractions({ doubleClickZoom: false }).extend([this.select]),
       controls: defaultControls().extend(mapControls),
-      layers: [basemap, this.outerVectorLayer, this.innerVectorLayer],
+      layers: [baseMaps, this.outerVectorLayer, this.innerVectorLayer],
       target: 'map',
       view: new View({
         center: [-11000000, 4600000],
