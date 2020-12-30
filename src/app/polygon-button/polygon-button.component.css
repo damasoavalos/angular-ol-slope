@@ -1,8 +1,8 @@
-.draw-outer-ring-button {
+.polygon-button {
   position: absolute;
   border-radius: 2px 2px 0 0;
-  width: 145px;
+  width: 120px;
   left: 10px;
-  top: 160px;
+  top: 125px;
   margin: 1px;
 }

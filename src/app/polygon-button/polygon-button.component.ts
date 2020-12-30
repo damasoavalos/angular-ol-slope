@@ -3,16 +3,16 @@ import Control from 'ol/control/Control';
 import { DrawInteractionService} from '../draw-interaction.service';
 
 @Component({
-  selector: 'app-draw-polygon-button',
-  templateUrl: './draw-polygon-button.component.html',
-  styleUrls: ['./draw-polygon-button.component.css']
+  selector: 'app-polygon-button',
+  templateUrl: './polygon-button.component.html',
+  styleUrls: ['./polygon-button.component.css']
 })
 
-export class DrawPolygonButtonComponent extends Control {
+export class PolygonButtonComponent extends Control {
 
   constructor(private drawInteractionService: DrawInteractionService ) {
     super({
-      element: document.getElementById('ol-draw-polygon')
+      element: document.getElementById('draw-polygon')
     });
   }
 

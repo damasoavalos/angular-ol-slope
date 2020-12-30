@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DrawPolygonButtonComponent } from './draw-polygon-button.component';
+import { PolygonButtonComponent } from './polygon-button.component';
 
-describe('DrawPolygonButtonComponent', () => {
-  let component: DrawPolygonButtonComponent;
-  let fixture: ComponentFixture<DrawPolygonButtonComponent>;
+describe('PolygonButtonComponent', () => {
+  let component: PolygonButtonComponent;
+  let fixture: ComponentFixture<PolygonButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DrawPolygonButtonComponent ]
+      declarations: [ PolygonButtonComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DrawPolygonButtonComponent);
+    fixture = TestBed.createComponent(PolygonButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

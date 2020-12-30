@@ -9,12 +9,13 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import GeometryType from 'ol/geom/GeometryType';
 import {defaults as defaultControls} from 'ol/control';
 import ContextMenu from 'ol-contextmenu';
-import { DrawLineButtonComponent } from '../draw-line-button/draw-line-button.component';
-import {DrawPolygonButtonComponent} from '../draw-polygon-button/draw-polygon-button.component';
-import {DrawOuterRingComponent} from '../draw-outer-ring/draw-outer-ring.component';
-import { DrawInteractionService} from '../draw-interaction.service';
+import {LineButtonComponent} from '../line-button/line-button.component';
+import {PolygonButtonComponent} from '../polygon-button/polygon-button.component';
+import {OuterRingComponent} from '../outer-ring/outer-ring.component';
+import {DrawInteractionService} from '../draw-interaction.service';
 import {Subscription} from 'rxjs';
 import {Fill, Stroke, Style} from 'ol/style';
+import { v4 as uuid } from 'uuid';
 
 @Component({
   selector: 'app-ol-map',
@@ -25,11 +26,11 @@ export class OlMapComponent implements OnInit {
   clickDrawLineEventSubscription: Subscription;
   clickDrawPolygonEventSubscription: Subscription;
   clickDrawOuterRingEventSubscription: Subscription;
-  map: Map;
   innerVectorSource: VectorSource;
   outerVectorSource: VectorSource;
   innerVectorLayer: VectorLayer;
   outerVectorLayer: VectorLayer;
+  map: Map;
   draw: Draw;
   select: Select;
   featureToDelete: any;
@@ -100,10 +101,11 @@ export class OlMapComponent implements OnInit {
     });
 
     // mapcontrols
-    const mapControls = [new DrawLineButtonComponent(new DrawInteractionService()),
-                         new DrawPolygonButtonComponent(new DrawInteractionService()),
-                         new DrawOuterRingComponent(new DrawInteractionService()),
+    const mapControls = [new LineButtonComponent(new DrawInteractionService()),
+                         new PolygonButtonComponent(new DrawInteractionService()),
+                         new OuterRingComponent(new DrawInteractionService()),
                          contextmenu];
+
     this.select = new Select();
     this.map = new Map({
       interactions: defaultInteractions({ doubleClickZoom: false }).extend([this.select]),
@@ -140,7 +142,10 @@ export class OlMapComponent implements OnInit {
       type: geometryType,
     });
     this.map.addInteraction(this.draw);
-    this.draw.on('drawend', () => {
+    this.draw.on('drawend', (event) => {
+      event.feature.setProperties({
+        id: uuid()
+      });
       this.map.removeInteraction(this.draw);
     });
   }

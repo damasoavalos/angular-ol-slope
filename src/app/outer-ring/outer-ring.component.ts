@@ -3,15 +3,15 @@ import Control from 'ol/control/Control';
 import { DrawInteractionService} from '../draw-interaction.service';
 
 @Component({
-  selector: 'app-draw-outer-ring',
-  templateUrl: './draw-outer-ring.component.html',
-  styleUrls: ['./draw-outer-ring.component.css']
+  selector: 'app-outer-ring',
+  templateUrl: './outer-ring.component.html',
+  styleUrls: ['./outer-ring.component.css']
 })
-export class DrawOuterRingComponent extends Control {
+export class OuterRingComponent extends Control {
 
   constructor(private drawInteractionService: DrawInteractionService ) {
     super({
-      element: document.getElementById('ol-draw-outer-ring')
+      element: document.getElementById('outer-ring')
     });
   }
 
