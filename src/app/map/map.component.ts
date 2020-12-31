@@ -213,8 +213,8 @@ export class MapComponent implements OnInit {
       layers: [baseMaps, this.outerVectorLayer, this.innerVectorLayer],
       target: 'map',
       view: new View({
-        center: [-11000000, 4600000],
-        zoom: 7,
+        center: [-12591958, 6640250],
+        zoom: 16.7,
       }),
     });
 
