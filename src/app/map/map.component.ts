@@ -214,7 +214,7 @@ export class MapComponent implements OnInit {
       target: 'map',
       view: new View({
         center: [-11000000, 4600000],
-        zoom: 4,
+        zoom: 7,
       }),
     });
 
