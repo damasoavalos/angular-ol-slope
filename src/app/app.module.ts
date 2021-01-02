@@ -7,7 +7,9 @@ import { MapComponent } from './map/map.component';
 import { LineButtonComponent } from './line-button/line-button.component';
 import { PolygonButtonComponent } from './polygon-button/polygon-button.component';
 import { OuterRingButtonComponent } from './outer-ring-button/outer-ring-button.component';
-import { ClearButtonComponent } from './clear-button/clear-button.component';
+import { ClearAllButtonComponent } from './clear-all-button/clear-all-button.component';
+import { RunLineButtonComponent } from './run-line-button/run-line-button.component';
+import { ClearRunLinesButtonComponent } from './clear-run-lines-button/clear-run-lines-button.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { ClearButtonComponent } from './clear-button/clear-button.component';
     LineButtonComponent,
     PolygonButtonComponent,
     OuterRingButtonComponent,
-    ClearButtonComponent
+    ClearAllButtonComponent,
+    RunLineButtonComponent,
+    ClearRunLinesButtonComponent
   ],
   imports: [
     BrowserModule,

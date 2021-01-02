@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import Control from 'ol/control/Control';
 import {DrawInteractionService} from '../draw-interaction.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-line-button',
@@ -9,10 +10,15 @@ import {DrawInteractionService} from '../draw-interaction.service';
 })
 
 export class LineButtonComponent extends Control {
+  LineButtonDisableEventSubscription: Subscription;
+  drawLineDisable: boolean;
 
   constructor(private drawInteractionService: DrawInteractionService ) {
     super({
       element: document.getElementById('draw-line')
+    });
+    this.LineButtonDisableEventSubscription = this.drawInteractionService.getLineButtonDisable().subscribe((x) => {
+      this.drawLineDisable = x;
     });
   }
 

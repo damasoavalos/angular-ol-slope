@@ -16,11 +16,6 @@
   /*border: none !important;*/
 }
 
-.ol-control {
-  background-color: rgba(0, 60, 136, 1) !important;
-  border: 0.5px solid #eee !important;
-}
-
 .layer-switcher.shown.ol-control {
   background-color: transparent !important;
   border: none !important;
@@ -28,4 +23,24 @@
 
 .layer-switcher button:focus, .layer-switcher button:hover {
   background-color: rgba(0, 60, 136, 1) !important;
+}
+
+.ol-control {
+  background-color: rgba(0, 60, 136, 1) !important;
+  border: 0.5px solid #eee !important;
+}
+
+.slope-buttons {
+  /*position: absolute;*/
+  /*border-radius: 2px 2px 0 0;*/
+  width: 150px;
+  left: 10px;
+  margin: 1px;
+  font-size: 1.14em;
+  font-weight: bold;
+  color: white !important;
+}
+
+.slope-buttons:disabled {
+  color: rgba(16, 16, 16, 0.3) !important;
 }

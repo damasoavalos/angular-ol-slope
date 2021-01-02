@@ -1,16 +1,16 @@
-import { Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import 'ol/ol.css';
 import 'ol-layerswitcher/dist/ol-layerswitcher.css';
-import Draw from 'ol/interaction/Draw';
-import {defaults as defaultInteractions, Select} from 'ol/interaction';
+// import Draw from 'ol/interaction/Draw';
+import {defaults as defaultInteractions, Select, Draw} from 'ol/interaction';
 import Map from 'ol/Map';
 import View from 'ol/View';
 // import OSMSource from 'ol/source/OSM';
 // import StamenSource from 'ol/source/Stamen';
+// import XYZLayer from 'ol/source/XYZ';
 import VectorSource from 'ol/source/Vector';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
-// import XYZLayer from 'ol/source/XYZ';
 import GroupLayer from 'ol/layer/Group';
 import GeometryType from 'ol/geom/GeometryType';
 import {defaults as defaultControls} from 'ol/control';
@@ -18,7 +18,9 @@ import ContextMenu from 'ol-contextmenu';
 import {LineButtonComponent} from '../line-button/line-button.component';
 import {PolygonButtonComponent} from '../polygon-button/polygon-button.component';
 import {OuterRingButtonComponent} from '../outer-ring-button/outer-ring-button.component';
-import {ClearButtonComponent} from '../clear-button/clear-button.component';
+import {RunLineButtonComponent} from '../run-line-button/run-line-button.component';
+import {ClearRunLinesButtonComponent} from '../clear-run-lines-button/clear-run-lines-button.component';
+import {ClearAllButtonComponent} from '../clear-all-button/clear-all-button.component';
 import {DrawInteractionService} from '../draw-interaction.service';
 import {Subscription} from 'rxjs';
 import {Fill, Stroke, Style} from 'ol/style';
@@ -35,11 +37,15 @@ export class MapComponent implements OnInit {
   clickDrawLineEventSubscription: Subscription;
   clickDrawPolygonEventSubscription: Subscription;
   clickDrawOuterRingEventSubscription: Subscription;
-  clickClearEventSubscription: Subscription;
+  clickDrawRunLineEventSubscription: Subscription;
+  clickClearRunLinesEventSubscription: Subscription;
+  clickClearAllEventSubscription: Subscription;
   innerVectorSource: VectorSource;
   outerVectorSource: VectorSource;
+  runLinesVectorSource: VectorSource;
   innerVectorLayer: VectorLayer;
   outerVectorLayer: VectorLayer;
+  runLinesVectorLayer: VectorLayer;
   map: Map;
   draw: Draw;
   select: Select;
@@ -57,9 +63,14 @@ export class MapComponent implements OnInit {
     this.clickDrawOuterRingEventSubscription = this.drawInteractionService.getClickDrawOuterRing().subscribe(() => {
       this.addInteraction(GeometryType.POLYGON, this.outerVectorSource);
     });
-    this.clickClearEventSubscription = this.drawInteractionService.getClickClear().subscribe(() => {
-      this.innerVectorSource.clear();
-      this.outerVectorSource.clear();
+    this.clickDrawRunLineEventSubscription = this.drawInteractionService.getClickDrawRunLine().subscribe(() => {
+      this.addInteraction(GeometryType.LINE_STRING, this.runLinesVectorSource);
+    });
+    this.clickClearRunLinesEventSubscription = this.drawInteractionService.getClickClearRunLines().subscribe(() => {
+      this.runLinesVectorSource.clear();
+    });
+    this.clickClearAllEventSubscription = this.drawInteractionService.getClickClearAll().subscribe(() => {
+      this.deleteAll();
     });
   }
   ngOnInit(): void {
@@ -135,7 +146,7 @@ export class MapComponent implements OnInit {
     } as GroupLayerOptions);
 
     this.innerVectorSource = new VectorSource({wrapX: false});
-    const innerRingColor = 'rgba(79, 79, 79, 1)';
+    const innerRingColor = 'rgba(79, 79, 79, 0.8)';
     this.innerVectorLayer = new VectorLayer({
       source: this.innerVectorSource,
       style: new Style({
@@ -162,6 +173,17 @@ export class MapComponent implements OnInit {
         }),
       })
     });
+    this.runLinesVectorSource = new VectorSource({wrapX: false});
+    const runLinesColor = 'rgba(0, 0, 255, 1)';
+    this.runLinesVectorLayer = new VectorLayer({
+      source: this.runLinesVectorSource,
+      style: new Style({
+        stroke: new Stroke({
+          color: runLinesColor,
+          width: 1,
+        }),
+      })
+    });
 
     // contextmenu
     const deleteIcon = 'https://cdn.iconscout.com/icon/free/png-32/delete-726-458722.png';
@@ -169,17 +191,7 @@ export class MapComponent implements OnInit {
       text: 'Delete',
       classname: 'marker',
       icon: deleteIcon,
-      callback: (() =>
-      {
-        const innerFeature = this.innerVectorSource.getFeatureById(this.selectedFeatureID);
-        if (innerFeature) {
-          this.innerVectorSource.removeFeature(innerFeature);
-        }
-        const outerFeature = this.outerVectorSource.getFeatureById(this.selectedFeatureID);
-        if (outerFeature) {
-          this.outerVectorSource.removeFeature(outerFeature);
-        }
-      })
+      callback: (() => { this.deleteFeature(); })
     },
       '-' // this is a separator
     ];
@@ -189,8 +201,8 @@ export class MapComponent implements OnInit {
       items: contextmenuItems
     });
 
+    // LayerSwitcher
     const groupStyle: GroupSelectStyle = 'group';
-
     const opts: LsOptions = {
       reverse: false,
       groupSelectStyle: groupStyle,
@@ -202,7 +214,9 @@ export class MapComponent implements OnInit {
     const mapControls = [new LineButtonComponent(new DrawInteractionService()),
                          new PolygonButtonComponent(new DrawInteractionService()),
                          new OuterRingButtonComponent(new DrawInteractionService()),
-                         new ClearButtonComponent(new DrawInteractionService()),
+                         new RunLineButtonComponent(new DrawInteractionService()),
+                         new ClearRunLinesButtonComponent(new DrawInteractionService()),
+                         new ClearAllButtonComponent(new DrawInteractionService()),
                          new LayerSwitcher(opts),
                          contextmenu];
 
@@ -210,7 +224,7 @@ export class MapComponent implements OnInit {
     this.map = new Map({
       interactions: defaultInteractions({ doubleClickZoom: false }).extend([this.select]),
       controls: defaultControls().extend(mapControls),
-      layers: [baseMaps, this.outerVectorLayer, this.innerVectorLayer],
+      layers: [baseMaps, this.outerVectorLayer, this.innerVectorLayer, this.runLinesVectorLayer],
       target: 'map',
       view: new View({
         center: [-12591958, 6640250],
@@ -236,14 +250,61 @@ export class MapComponent implements OnInit {
   }
 
   addInteraction(geometryType, vectorSource): void {
-    this.draw = new Draw({
-      source: vectorSource,
-      type: geometryType,
-    });
-    this.map.addInteraction(this.draw);
-    this.draw.on('drawend', (event) => {
-      event.feature.setId(uuid());
-      this.map.removeInteraction(this.draw);
-    });
+    // this check is to avoid an issue when click twice on a button before finish draw
+    if (!(this.map.getInteractions().getArray().some(item => item instanceof Draw))) {
+      this.draw = new Draw({
+        source: vectorSource,
+        type: geometryType,
+      });
+      this.map.addInteraction(this.draw);
+      this.draw.on('drawend', (event) => {
+        switch (vectorSource) {
+          case this.innerVectorSource: {
+            this.drawInteractionService.sendLineButtonDisable(true);
+            this.drawInteractionService.sendPolygonButtonDisable(true);
+            break;
+          }
+          case this.outerVectorSource: {
+            this.drawInteractionService.sendOuterRingButtonDisable(true);
+            break;
+          }
+        }
+        event.feature.setId(uuid());
+        this.map.removeInteraction(this.draw);
+      });
+    }
   }
+
+  deleteFeature(): void {
+    // Inner Polygon and/or Line feature
+    const innerFeature = this.innerVectorSource.getFeatureById(this.selectedFeatureID);
+    if (innerFeature) {
+      this.innerVectorSource.removeFeature(innerFeature);
+      this.drawInteractionService.sendLineButtonDisable(false);
+      this.drawInteractionService.sendPolygonButtonDisable(false);
+    }
+
+    // Outer Polygon feature
+    const outerFeature = this.outerVectorSource.getFeatureById(this.selectedFeatureID);
+    if (outerFeature) {
+      this.outerVectorSource.removeFeature(outerFeature);
+      this.drawInteractionService.sendOuterRingButtonDisable(false);
+    }
+
+    // Run line feature
+    const runLineFeature = this.runLinesVectorSource.getFeatureById(this.selectedFeatureID);
+    if (runLineFeature) {
+      this.runLinesVectorSource.removeFeature(runLineFeature);
+    }
+  }
+
+  deleteAll(): void {
+    this.innerVectorSource.clear();
+    this.outerVectorSource.clear();
+    this.runLinesVectorSource.clear();
+    this.drawInteractionService.sendLineButtonDisable(false);
+    this.drawInteractionService.sendPolygonButtonDisable(false);
+    this.drawInteractionService.sendOuterRingButtonDisable(false);
+  }
+
 }

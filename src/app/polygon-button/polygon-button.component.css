@@ -1,11 +1,3 @@
 .polygon-button {
-  position: absolute;
-  border-radius: 2px 2px 0 0;
-  width: 120px;
-  left: 10px;
   top: 125px;
-  margin: 1px;
-  font-size: 1.14em;
-  font-weight: bold;
-  color: white;
 }
