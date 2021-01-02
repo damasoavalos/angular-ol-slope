@@ -1,19 +1,19 @@
-import {Component, OnInit} from '@angular/core';
-import 'ol/ol.css';
-import 'ol-layerswitcher/dist/ol-layerswitcher.css';
 // import Draw from 'ol/interaction/Draw';
-import {defaults as defaultInteractions, Select, Draw} from 'ol/interaction';
-import Map from 'ol/Map';
-import View from 'ol/View';
 // import OSMSource from 'ol/source/OSM';
 // import StamenSource from 'ol/source/Stamen';
 // import XYZLayer from 'ol/source/XYZ';
+import {Component, OnInit} from '@angular/core';
+import 'ol/ol.css';
+import 'ol-layerswitcher/dist/ol-layerswitcher.css';
+import {defaults as defaultInteractions, Select, Draw} from 'ol/interaction';
+import Map from 'ol/Map';
+import View from 'ol/View';
 import VectorSource from 'ol/source/Vector';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import GroupLayer from 'ol/layer/Group';
 import GeometryType from 'ol/geom/GeometryType';
-import {defaults as defaultControls} from 'ol/control';
+import {defaults as defaultControls, ZoomToExtent} from 'ol/control';
 import ContextMenu from 'ol-contextmenu';
 import {LineButtonComponent} from '../line-button/line-button.component';
 import {PolygonButtonComponent} from '../polygon-button/polygon-button.component';
@@ -27,6 +27,7 @@ import {Fill, Stroke, Style} from 'ol/style';
 import { v4 as uuid } from 'uuid';
 import LayerSwitcher, {Options as LsOptions, GroupSelectStyle, BaseLayerOptions, GroupLayerOptions} from 'ol-layerswitcher';
 import {TileImage} from 'ol/source';
+import {Extent, getCenter} from 'ol/extent';
 
 @Component({
   selector: 'app-map',
@@ -51,6 +52,10 @@ export class MapComponent implements OnInit {
   select: Select;
   featureToDelete: any;
   selectedFeatureID: number | string;
+  homeExtent: Extent = [-12593284.2123545389622450,
+                        6639546.3956663161516190,
+                        -12590723.4198377579450607,
+                        6640958.5132011296227574];
 
   constructor(private drawInteractionService: DrawInteractionService) {
     // subscription to click events from draw buttons
@@ -209,6 +214,12 @@ export class MapComponent implements OnInit {
       startActive: false,
       activationMode: 'click'
     };
+    const layerSwitcher = new LayerSwitcher(opts);
+
+    // Home button AKA ZoomToExtent
+    const zoomToExtent = new ZoomToExtent({
+      extent: this.homeExtent
+    });
 
     // mapcontrols
     const mapControls = [new LineButtonComponent(new DrawInteractionService()),
@@ -217,7 +228,8 @@ export class MapComponent implements OnInit {
                          new RunLineButtonComponent(new DrawInteractionService()),
                          new ClearRunLinesButtonComponent(new DrawInteractionService()),
                          new ClearAllButtonComponent(new DrawInteractionService()),
-                         new LayerSwitcher(opts),
+                         layerSwitcher,
+                         zoomToExtent,
                          contextmenu];
 
     this.select = new Select();
@@ -227,7 +239,7 @@ export class MapComponent implements OnInit {
       layers: [baseMaps, this.outerVectorLayer, this.innerVectorLayer, this.runLinesVectorLayer],
       target: 'map',
       view: new View({
-        center: [-12591958, 6640250],
+        center: getCenter(this.homeExtent),
         zoom: 16.7,
       }),
     });

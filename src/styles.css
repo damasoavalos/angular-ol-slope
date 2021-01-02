@@ -44,3 +44,16 @@
 .slope-buttons:disabled {
   color: rgba(16, 16, 16, 0.3) !important;
 }
+
+.layer-switcher.shown button {
+  top: 6px !important;
+  left: 38px !important;
+}
+
+.layer-switcher.shown.layer-switcher-activation-mode-click {
+  width: 267px !important;
+}
+
+li.layer-switcher-base-group > label {
+  margin-top: 20px !important;
+}
