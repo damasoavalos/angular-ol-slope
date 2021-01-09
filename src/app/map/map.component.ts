@@ -42,6 +42,8 @@ export class MapComponent implements OnInit {
   clickDrawRunLineEventSubscription: Subscription;
   clickClearRunLinesEventSubscription: Subscription;
   clickClearAllEventSubscription: Subscription;
+  elevationChangeEventSubscription: Subscription;
+  elevationValue: number;
   innerVectorSource: VectorSource;
   outerVectorSource: VectorSource;
   runLinesVectorSource: VectorSource;
@@ -77,6 +79,10 @@ export class MapComponent implements OnInit {
     });
     this.clickClearAllEventSubscription = this.drawInteractionService.getClickClearAll().subscribe(() => {
       this.deleteAll();
+    });
+    this.elevationChangeEventSubscription = this.drawInteractionService.getElevationValue().subscribe((x) => {
+      this.elevationValue = x;
+      console.log(this.elevationValue);
     });
   }
   ngOnInit(): void {

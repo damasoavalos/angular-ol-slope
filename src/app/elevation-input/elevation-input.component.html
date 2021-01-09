@@ -1,7 +1,5 @@
 <div id="elevation-input">
   <label class="button-number ol-control" for="custom-number" style="left: 10px; width: 68px">Elev(m):</label>
-<!--  <button (click)="onDecrement()" class="button-number ol-control" style="left: 88px;" title="smaller">-</button>-->
-<!--  <button (click)="onIncrement()" class="button-number ol-control" style="left: 109px;" title="bigger">+</button>-->
   <input (keyup)="onValidate()"
          [(ngModel)]="elevationValue"
          [style.width.ch]="elevationValue ? elevationValue.toString().length+6 : 7"
@@ -9,7 +7,8 @@
          id="custom-number"
          min=1
          style="left: 88px; text-align:right;"
-         type="number">
+         type="number"
+         (ngModelChange)="onElevValueChange()">
   <button (click)="onDecrement()" class="button-number ol-control" style="left: 88px;" title="smaller">-</button>
   <button (click)="onIncrement()" class="button-number ol-control" style="left: 109px;" title="bigger">+</button>
 </div>

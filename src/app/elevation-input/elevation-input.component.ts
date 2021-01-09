@@ -15,21 +15,30 @@ export class ElevationInputComponent extends Control {
     });
   }
 
-  elevationValue = 1;
+  elevationValue = 0;
 
   onIncrement(): void {
     this.elevationValue += 1;
+    this.drawInteractionService.sendElevationValue(this.elevationValue);
   }
 
   onDecrement(): void {
     if (this.elevationValue > 0) {
       this.elevationValue -= 1;
+      this.drawInteractionService.sendElevationValue(this.elevationValue);
     }
   }
 
   onValidate(): void {
     if (this.elevationValue <= 0) {
       this.elevationValue = 0;
+      this.drawInteractionService.sendElevationValue(this.elevationValue);
+    }
+  }
+
+  onElevValueChange(): void {
+    if (this.elevationValue) {
+      this.drawInteractionService.sendElevationValue(this.elevationValue);
     }
   }
 

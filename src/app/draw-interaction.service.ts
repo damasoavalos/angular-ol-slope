@@ -16,6 +16,8 @@ export class DrawInteractionService {
   private subjectPolygonButtonDisable = new BehaviorSubject<boolean>(false);
   private subjectOuterRingButtonDisable = new BehaviorSubject<boolean>(false);
 
+  private subjectElevationValue = new BehaviorSubject<number>(0);
+
   sendClickDrawLine(): void {
     this.subjectDrawLine.next();
   }
@@ -77,5 +79,12 @@ export class DrawInteractionService {
   }
   getOuterRingButtonDisable(): Observable<boolean>{
     return this.subjectOuterRingButtonDisable.asObservable();
+  }
+
+  sendElevationValue(elevValue): void {
+    this.subjectElevationValue.next(elevValue);
+  }
+  getElevationValue(): Observable<number>{
+    return this.subjectElevationValue.asObservable();
   }
 }
