@@ -1,0 +1,14 @@
+<div id="elevation-input">
+  <label >
+    <button class="button-number ol-control" (click)="onDecrement()" title="smaller" style="left: 10px;">-</button>
+    <button class="button-number ol-control" (click)="onIncrement()" title="bigger" style="left: 40px;">+</button>
+    <input id="custom-number"
+           type="number"
+           min=1
+           [style.width.ch]="elevationValue ? elevationValue.toString().length+1 : 2"
+           [(ngModel)]="elevationValue"
+           class="form-control button-number ol-control"
+           (keyup)="onValidate()"
+           style="left: 78px;">
+  </label>
+</div>

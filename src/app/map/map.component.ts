@@ -20,6 +20,7 @@ import {PolygonButtonComponent} from '../polygon-button/polygon-button.component
 import {OuterRingButtonComponent} from '../outer-ring-button/outer-ring-button.component';
 import {RunLineButtonComponent} from '../run-line-button/run-line-button.component';
 import {ClearRunLinesButtonComponent} from '../clear-run-lines-button/clear-run-lines-button.component';
+import {ElevationInputComponent} from '../elevation-input/elevation-input.component';
 import {ClearAllButtonComponent} from '../clear-all-button/clear-all-button.component';
 import {DrawInteractionService} from '../draw-interaction.service';
 import {Subscription} from 'rxjs';
@@ -226,6 +227,7 @@ export class MapComponent implements OnInit {
                          new PolygonButtonComponent(new DrawInteractionService()),
                          new OuterRingButtonComponent(new DrawInteractionService()),
                          new RunLineButtonComponent(new DrawInteractionService()),
+                         new ElevationInputComponent(new DrawInteractionService()),
                          new ClearRunLinesButtonComponent(new DrawInteractionService()),
                          new ClearAllButtonComponent(new DrawInteractionService()),
                          layerSwitcher,

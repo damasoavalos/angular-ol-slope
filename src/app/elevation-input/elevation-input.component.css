@@ -1,0 +1,9 @@
+.button-number {
+  margin: 1px;
+  font-size: 1.14em;
+  font-weight: bold;
+  color: white !important;
+  top: 230px;
+  width: 30px;
+  text-align:center;
+}

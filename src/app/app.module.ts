@@ -10,6 +10,8 @@ import { OuterRingButtonComponent } from './outer-ring-button/outer-ring-button.
 import { ClearAllButtonComponent } from './clear-all-button/clear-all-button.component';
 import { RunLineButtonComponent } from './run-line-button/run-line-button.component';
 import { ClearRunLinesButtonComponent } from './clear-run-lines-button/clear-run-lines-button.component';
+import { ElevationInputComponent } from './elevation-input/elevation-input.component';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,12 +22,14 @@ import { ClearRunLinesButtonComponent } from './clear-run-lines-button/clear-run
     OuterRingButtonComponent,
     ClearAllButtonComponent,
     RunLineButtonComponent,
-    ClearRunLinesButtonComponent
+    ClearRunLinesButtonComponent,
+    ElevationInputComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
