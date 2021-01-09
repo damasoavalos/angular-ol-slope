@@ -1,14 +1,15 @@
 <div id="elevation-input">
-  <label >
-    <button class="button-number ol-control" (click)="onDecrement()" title="smaller" style="left: 10px;">-</button>
-    <button class="button-number ol-control" (click)="onIncrement()" title="bigger" style="left: 40px;">+</button>
-    <input id="custom-number"
-           type="number"
-           min=1
-           [style.width.ch]="elevationValue ? elevationValue.toString().length+1 : 2"
-           [(ngModel)]="elevationValue"
-           class="form-control button-number ol-control"
-           (keyup)="onValidate()"
-           style="left: 78px;">
-  </label>
+  <label class="button-number ol-control" for="custom-number" style="left: 10px; width: 68px">Elev(m):</label>
+<!--  <button (click)="onDecrement()" class="button-number ol-control" style="left: 88px;" title="smaller">-</button>-->
+<!--  <button (click)="onIncrement()" class="button-number ol-control" style="left: 109px;" title="bigger">+</button>-->
+  <input (keyup)="onValidate()"
+         [(ngModel)]="elevationValue"
+         [style.width.ch]="elevationValue ? elevationValue.toString().length+6 : 7"
+         class="form-control button-number ol-control"
+         id="custom-number"
+         min=1
+         style="left: 88px; text-align:right;"
+         type="number">
+  <button (click)="onDecrement()" class="button-number ol-control" style="left: 88px;" title="smaller">-</button>
+  <button (click)="onIncrement()" class="button-number ol-control" style="left: 109px;" title="bigger">+</button>
 </div>

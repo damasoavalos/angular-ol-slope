@@ -22,14 +22,14 @@ export class ElevationInputComponent extends Control {
   }
 
   onDecrement(): void {
-    if (this.elevationValue > 1) {
+    if (this.elevationValue > 0) {
       this.elevationValue -= 1;
     }
   }
 
   onValidate(): void {
     if (this.elevationValue <= 0) {
-      this.elevationValue = 1;
+      this.elevationValue = 0;
     }
   }
 

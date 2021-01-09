@@ -4,6 +4,25 @@
   font-weight: bold;
   color: white !important;
   top: 230px;
-  width: 30px;
+  width: 22px;
   text-align:center;
 }
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/*[type=number]::-webkit-textfield-decoration-container {flex-direction: row-reverse}*/
+
+/*input[type=number]::-webkit-inner-spin-button {*/
+/*  height: 20px;*/
+/*  opacity: 1;*/
+/*}*/
