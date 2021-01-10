@@ -82,7 +82,6 @@ export class MapComponent implements OnInit {
     });
     this.elevationChangeEventSubscription = this.drawInteractionService.getElevationValue().subscribe((x) => {
       this.elevationValue = x;
-      console.log(this.elevationValue);
     });
   }
   ngOnInit(): void {
