@@ -35,6 +35,7 @@ import {Extent, getCenter} from 'ol/extent';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
+
 export class MapComponent implements OnInit {
   clickDrawLineEventSubscription: Subscription;
   clickDrawPolygonEventSubscription: Subscription;
@@ -43,7 +44,6 @@ export class MapComponent implements OnInit {
   clickClearRunLinesEventSubscription: Subscription;
   clickClearAllEventSubscription: Subscription;
   elevationChangeEventSubscription: Subscription;
-  elevationValue: number;
   innerVectorSource: VectorSource;
   outerVectorSource: VectorSource;
   runLinesVectorSource: VectorSource;
@@ -53,12 +53,14 @@ export class MapComponent implements OnInit {
   map: Map;
   draw: Draw;
   select: Select;
-  featureToDelete: any;
+  // featureToDelete: any;
   selectedFeatureID: number | string;
   homeExtent: Extent = [-12593284.2123545389622450,
                         6639546.3956663161516190,
                         -12590723.4198377579450607,
                         6640958.5132011296227574];
+  // riseValue: number;
+  slopeValue: number;
 
   constructor(private drawInteractionService: DrawInteractionService) {
     // subscription to click events from draw buttons
@@ -81,7 +83,8 @@ export class MapComponent implements OnInit {
       this.deleteAll();
     });
     this.elevationChangeEventSubscription = this.drawInteractionService.getElevationValue().subscribe((x) => {
-      this.elevationValue = x;
+      // this.riseValue = x;
+      this.slopeValue = this.calculateSlope(x);
     });
   }
   ngOnInit(): void {
@@ -324,6 +327,11 @@ export class MapComponent implements OnInit {
     this.drawInteractionService.sendLineButtonDisable(false);
     this.drawInteractionService.sendPolygonButtonDisable(false);
     this.drawInteractionService.sendOuterRingButtonDisable(false);
+  }
+
+  calculateSlope(riseValue): number {
+    console.log(riseValue);
+    return null;
   }
 
 }
