@@ -122,7 +122,6 @@
       }
     }
   },
-  "defaultProject": "angular-ol-slope",
   "cli": {
     "analytics": false
   }
