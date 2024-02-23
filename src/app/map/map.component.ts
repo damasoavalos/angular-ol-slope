@@ -2,33 +2,37 @@
 // import OSMSource from 'ol/source/OSM';
 // import StamenSource from 'ol/source/Stamen';
 // import XYZLayer from 'ol/source/XYZ';
-import { Component, type OnInit } from '@angular/core'
-import 'ol/ol.css'
-import 'ol-layerswitcher/dist/ol-layerswitcher.css'
-import { defaults as defaultInteractions, Select, Draw } from 'ol/interaction'
-import Map from 'ol/Map'
-import View from 'ol/View'
-import VectorSource from 'ol/source/Vector'
-import TileLayer from 'ol/layer/Tile'
-import VectorLayer from 'ol/layer/Vector'
-import GroupLayer from 'ol/layer/Group'
-import GeometryType from 'ol/geom/GeometryType'
-import { defaults as defaultControls, ZoomToExtent } from 'ol/control'
-import ContextMenu from 'ol-contextmenu'
-import { LineButtonComponent } from '../line-button/line-button.component'
-import { PolygonButtonComponent } from '../polygon-button/polygon-button.component'
-import { OuterRingButtonComponent } from '../outer-ring-button/outer-ring-button.component'
-import { RunLineButtonComponent } from '../run-line-button/run-line-button.component'
-import { ClearRunLinesButtonComponent } from '../clear-run-lines-button/clear-run-lines-button.component'
-import { ElevationInputComponent } from '../elevation-input/elevation-input.component'
-import { ClearAllButtonComponent } from '../clear-all-button/clear-all-button.component'
-import { DrawInteractionService } from '../draw-interaction.service'
-import { type Subscription } from 'rxjs'
-import { Fill, Stroke, Style } from 'ol/style'
-import { v4 as uuid } from 'uuid'
-import LayerSwitcher, { type Options as LsOptions, type GroupSelectStyle, type BaseLayerOptions, type GroupLayerOptions } from 'ol-layerswitcher'
-import { TileImage } from 'ol/source'
-import { type Extent, getCenter } from 'ol/extent'
+import { Component, type OnInit } from '@angular/core';
+// import 'ol/ol.css';
+// import 'ol-layerswitcher/dist/ol-layerswitcher.css';
+import { defaults as defaultInteractions, Select, Draw } from 'ol/interaction';
+import Map from 'ol/Map';
+import View from 'ol/View';
+import VectorSource from 'ol/source/Vector';
+import TileLayer from 'ol/layer/Tile';
+import VectorLayer from 'ol/layer/Vector';
+import {Feature} from 'ol';
+import { Geometry } from 'ol/geom';
+import GroupLayer from 'ol/layer/Group';
+// import GeometryType from "ol/geom/GeometryType";
+import { defaults as defaultControls, ZoomToExtent } from 'ol/control';
+import ContextMenu from 'ol-contextmenu';
+import { LineButtonComponent } from '../line-button/line-button.component';
+import { PolygonButtonComponent } from '../polygon-button/polygon-button.component';
+import { OuterRingButtonComponent } from '../outer-ring-button/outer-ring-button.component';
+import { RunLineButtonComponent } from '../run-line-button/run-line-button.component';
+import { ClearRunLinesButtonComponent } from '../clear-run-lines-button/clear-run-lines-button.component';
+import { ElevationInputComponent } from '../elevation-input/elevation-input.component';
+import { ClearAllButtonComponent } from '../clear-all-button/clear-all-button.component';
+import { DrawInteractionService } from '../draw-interaction.service';
+import { type Subscription } from 'rxjs';
+import { Fill, Stroke, Style } from 'ol/style';
+import { v4 as uuid } from 'uuid';
+import LayerSwitcher, { type Options as LsOptions, type GroupSelectStyle, type BaseLayerOptions, type GroupLayerOptions } from 'ol-layerswitcher';
+import { TileImage } from 'ol/source';
+import { type Extent, getCenter } from 'ol/extent';
+
+type GeometryType = 'Point' | 'LineString' | 'Polygon' | 'MultiPoint' | 'MultiLineString' | 'MultiPolygon' | 'Circle';
 
 @Component({
   selector: 'app-map',
@@ -47,9 +51,9 @@ export class MapComponent implements OnInit {
   innerVectorSource: VectorSource
   outerVectorSource: VectorSource
   runLinesVectorSource: VectorSource
-  innerVectorLayer: VectorLayer
-  outerVectorLayer: VectorLayer
-  runLinesVectorLayer: VectorLayer
+  innerVectorLayer: VectorLayer<VectorSource<Feature<Geometry>>>;
+  outerVectorLayer: VectorLayer<VectorSource<Feature<Geometry>>>;
+  runLinesVectorLayer: VectorLayer<VectorSource<Feature<Geometry>>>;
   map: Map
   draw: Draw
   select: Select
@@ -66,16 +70,16 @@ export class MapComponent implements OnInit {
   constructor (private readonly drawInteractionService: DrawInteractionService) {
     // subscription to click events from draw buttons
     this.clickDrawLineEventSubscription = this.drawInteractionService.getClickDrawLine().subscribe(() => {
-      this.addInteraction(GeometryType.LINE_STRING, this.innerVectorSource)
+      this.addInteraction('LineString', this.innerVectorSource)
     })
     this.clickDrawPolygonEventSubscription = this.drawInteractionService.getClickDrawPolygon().subscribe(() => {
-      this.addInteraction(GeometryType.POLYGON, this.innerVectorSource)
+      this.addInteraction('Polygon', this.innerVectorSource)
     })
     this.clickDrawOuterRingEventSubscription = this.drawInteractionService.getClickDrawOuterRing().subscribe(() => {
-      this.addInteraction(GeometryType.POLYGON, this.outerVectorSource)
+      this.addInteraction('Polygon', this.outerVectorSource)
     })
     this.clickDrawRunLineEventSubscription = this.drawInteractionService.getClickDrawRunLine().subscribe(() => {
-      this.addInteraction(GeometryType.LINE_STRING, this.runLinesVectorSource)
+      this.addInteraction('LineString', this.runLinesVectorSource)
     })
     this.clickClearRunLinesEventSubscription = this.drawInteractionService.getClickClearRunLines().subscribe(() => {
       this.runLinesVectorSource.clear()
@@ -272,7 +276,7 @@ export class MapComponent implements OnInit {
     })
   }
 
-  addInteraction (geometryType, vectorSource): void {
+  addInteraction (geometryType: GeometryType, vectorSource: VectorSource<Feature<Geometry>>): void {
     // this check is to avoid an issue when click twice on a button before finish draw
     if (!(this.map.getInteractions().getArray().some(item => item instanceof Draw))) {
       this.draw = new Draw({
@@ -300,7 +304,7 @@ export class MapComponent implements OnInit {
 
   deleteFeature (): void {
     // Inner Polygon and/or Line feature
-    const innerFeature = this.innerVectorSource.getFeatureById(this.selectedFeatureID)
+    const innerFeature = this.innerVectorSource.getFeatureById(this.selectedFeatureID) as Feature<Geometry>
     if (innerFeature) {
       this.innerVectorSource.removeFeature(innerFeature)
       this.drawInteractionService.sendLineButtonDisable(false)
@@ -308,14 +312,14 @@ export class MapComponent implements OnInit {
     }
 
     // Outer Polygon feature
-    const outerFeature = this.outerVectorSource.getFeatureById(this.selectedFeatureID)
+    const outerFeature = this.outerVectorSource.getFeatureById(this.selectedFeatureID) as Feature<Geometry>
     if (outerFeature) {
       this.outerVectorSource.removeFeature(outerFeature)
       this.drawInteractionService.sendOuterRingButtonDisable(false)
     }
 
     // Run line feature
-    const runLineFeature = this.runLinesVectorSource.getFeatureById(this.selectedFeatureID)
+    const runLineFeature = this.runLinesVectorSource.getFeatureById(this.selectedFeatureID) as Feature<Geometry>
     if (runLineFeature) {
       this.runLinesVectorSource.removeFeature(runLineFeature)
     }
