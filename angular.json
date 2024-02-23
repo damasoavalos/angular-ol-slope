@@ -13,6 +13,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "optimization": {
+              "scripts": true,
+              "styles": false
+            },
             "outputPath": "dist/angular-ol-slope",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -95,7 +99,7 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-devkit/build-angular:ESLint",
           "options": {
             "tsConfig": [
               "tsconfig.app.json",

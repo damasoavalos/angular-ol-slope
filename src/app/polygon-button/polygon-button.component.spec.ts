@@ -1,25 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { PolygonButtonComponent } from './polygon-button.component';
+import { PolygonButtonComponent } from './polygon-button.component'
 
 describe('PolygonButtonComponent', () => {
-  let component: PolygonButtonComponent;
-  let fixture: ComponentFixture<PolygonButtonComponent>;
+  let component: PolygonButtonComponent
+  let fixture: ComponentFixture<PolygonButtonComponent>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PolygonButtonComponent ]
+      declarations: [PolygonButtonComponent]
     })
-    .compileComponents();
-  });
+      .compileComponents()
+  })
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PolygonButtonComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(PolygonButtonComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

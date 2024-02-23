@@ -1,25 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { LineButtonComponent } from './line-button.component';
+import { LineButtonComponent } from './line-button.component'
 
 describe('LineButtonComponent', () => {
-  let component: LineButtonComponent;
-  let fixture: ComponentFixture<LineButtonComponent>;
+  let component: LineButtonComponent
+  let fixture: ComponentFixture<LineButtonComponent>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LineButtonComponent ]
+      declarations: [LineButtonComponent]
     })
-    .compileComponents();
-  });
+      .compileComponents()
+  })
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LineButtonComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(LineButtonComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

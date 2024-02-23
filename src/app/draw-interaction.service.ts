@@ -1,90 +1,100 @@
-import { Injectable } from '@angular/core';
-import {Observable, Subject, BehaviorSubject} from 'rxjs';
+import { Injectable } from '@angular/core'
+import { type Observable, Subject, BehaviorSubject } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
 })
 export class DrawInteractionService {
-  private subjectDrawLine = new Subject<any>();
-  private subjectDrawPolygon = new Subject<any>();
-  private subjectDrawOuterRing = new Subject<any>();
-  private subjectDrawRunLine = new Subject<any>();
-  private subjectClearRunLines = new Subject<any>();
-  private subjectClearAll = new Subject<any>();
+  private readonly subjectDrawLine = new Subject<any>()
+  private readonly subjectDrawPolygon = new Subject<any>()
+  private readonly subjectDrawOuterRing = new Subject<any>()
+  private readonly subjectDrawRunLine = new Subject<any>()
+  private readonly subjectClearRunLines = new Subject<any>()
+  private readonly subjectClearAll = new Subject<any>()
 
-  private subjectLineButtonDisable = new BehaviorSubject<boolean>(false);
-  private subjectPolygonButtonDisable = new BehaviorSubject<boolean>(false);
-  private subjectOuterRingButtonDisable = new BehaviorSubject<boolean>(false);
+  private readonly subjectLineButtonDisable = new BehaviorSubject<boolean>(false)
+  private readonly subjectPolygonButtonDisable = new BehaviorSubject<boolean>(false)
+  private readonly subjectOuterRingButtonDisable = new BehaviorSubject<boolean>(false)
 
-  private subjectElevationValue = new BehaviorSubject<number>(0);
+  private readonly subjectElevationValue = new BehaviorSubject<number>(0)
 
-  sendClickDrawLine(): void {
-    this.subjectDrawLine.next();
-  }
-  getClickDrawLine(): Observable<any>{
-    return this.subjectDrawLine.asObservable();
+  sendClickDrawLine (): void {
+    this.subjectDrawLine.next()
   }
 
-  sendClickDrawPolygon(): void {
-    this.subjectDrawPolygon.next();
-  }
-  getClickDrawPolygon(): Observable<any>{
-    return this.subjectDrawPolygon.asObservable();
+  getClickDrawLine (): Observable<any> {
+    return this.subjectDrawLine.asObservable()
   }
 
-  sendClickDrawOuterRing(): void {
-    this.subjectDrawOuterRing.next();
-  }
-  getClickDrawOuterRing(): Observable<any>{
-    return this.subjectDrawOuterRing.asObservable();
+  sendClickDrawPolygon (): void {
+    this.subjectDrawPolygon.next()
   }
 
-  sendClickDrawRunLine(): void {
-    this.subjectDrawRunLine.next();
-  }
-  getClickDrawRunLine(): Observable<any>{
-    return this.subjectDrawRunLine.asObservable();
+  getClickDrawPolygon (): Observable<any> {
+    return this.subjectDrawPolygon.asObservable()
   }
 
-  sendClickClearRunLines(): void {
-    this.subjectClearRunLines.next();
-  }
-  getClickClearRunLines(): Observable<any>{
-    return this.subjectClearRunLines.asObservable();
+  sendClickDrawOuterRing (): void {
+    this.subjectDrawOuterRing.next()
   }
 
-  sendClickClearAll(): void {
-    this.subjectClearAll.next();
-  }
-  getClickClearAll(): Observable<any>{
-    return this.subjectClearAll.asObservable();
+  getClickDrawOuterRing (): Observable<any> {
+    return this.subjectDrawOuterRing.asObservable()
   }
 
-  sendLineButtonDisable(state): void {
-    this.subjectLineButtonDisable.next(state);
-  }
-  getLineButtonDisable(): Observable<boolean>{
-    return this.subjectLineButtonDisable.asObservable();
+  sendClickDrawRunLine (): void {
+    this.subjectDrawRunLine.next()
   }
 
-  sendPolygonButtonDisable(state): void {
-    this.subjectPolygonButtonDisable.next(state);
-  }
-  getPolygonButtonDisable(): Observable<boolean>{
-    return this.subjectPolygonButtonDisable.asObservable();
+  getClickDrawRunLine (): Observable<any> {
+    return this.subjectDrawRunLine.asObservable()
   }
 
-  sendOuterRingButtonDisable(state): void {
-    this.subjectOuterRingButtonDisable.next(state);
-  }
-  getOuterRingButtonDisable(): Observable<boolean>{
-    return this.subjectOuterRingButtonDisable.asObservable();
+  sendClickClearRunLines (): void {
+    this.subjectClearRunLines.next()
   }
 
-  sendElevationValue(elevValue): void {
-    this.subjectElevationValue.next(elevValue);
+  getClickClearRunLines (): Observable<any> {
+    return this.subjectClearRunLines.asObservable()
   }
-  getElevationValue(): Observable<number>{
-    return this.subjectElevationValue.asObservable();
+
+  sendClickClearAll (): void {
+    this.subjectClearAll.next()
+  }
+
+  getClickClearAll (): Observable<any> {
+    return this.subjectClearAll.asObservable()
+  }
+
+  sendLineButtonDisable (state): void {
+    this.subjectLineButtonDisable.next(state)
+  }
+
+  getLineButtonDisable (): Observable<boolean> {
+    return this.subjectLineButtonDisable.asObservable()
+  }
+
+  sendPolygonButtonDisable (state): void {
+    this.subjectPolygonButtonDisable.next(state)
+  }
+
+  getPolygonButtonDisable (): Observable<boolean> {
+    return this.subjectPolygonButtonDisable.asObservable()
+  }
+
+  sendOuterRingButtonDisable (state): void {
+    this.subjectOuterRingButtonDisable.next(state)
+  }
+
+  getOuterRingButtonDisable (): Observable<boolean> {
+    return this.subjectOuterRingButtonDisable.asObservable()
+  }
+
+  sendElevationValue (elevValue): void {
+    this.subjectElevationValue.next(elevValue)
+  }
+
+  getElevationValue (): Observable<number> {
+    return this.subjectElevationValue.asObservable()
   }
 }

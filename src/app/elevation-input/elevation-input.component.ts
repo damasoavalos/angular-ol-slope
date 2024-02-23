@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import Control from 'ol/control/Control';
-import {DrawInteractionService} from '../draw-interaction.service';
+import { Component } from '@angular/core'
+import Control from 'ol/control/Control'
+import { type DrawInteractionService } from '../draw-interaction.service'
 
 @Component({
   selector: 'app-elevation-input',
@@ -8,38 +8,36 @@ import {DrawInteractionService} from '../draw-interaction.service';
   styleUrls: ['./elevation-input.component.css']
 })
 export class ElevationInputComponent extends Control {
-
-  constructor(private drawInteractionService: DrawInteractionService) {
+  constructor (private readonly drawInteractionService: DrawInteractionService) {
     super({
       element: document.getElementById('elevation-input')
-    });
+    })
   }
 
-  elevationValue = 0;
+  elevationValue = 0
 
-  onIncrement(): void {
-    this.elevationValue += 1;
-    this.drawInteractionService.sendElevationValue(this.elevationValue);
+  onIncrement (): void {
+    this.elevationValue += 1
+    this.drawInteractionService.sendElevationValue(this.elevationValue)
   }
 
-  onDecrement(): void {
+  onDecrement (): void {
     if (this.elevationValue > 0) {
-      this.elevationValue -= 1;
-      this.drawInteractionService.sendElevationValue(this.elevationValue);
+      this.elevationValue -= 1
+      this.drawInteractionService.sendElevationValue(this.elevationValue)
     }
   }
 
-  onValidate(): void {
+  onValidate (): void {
     if (this.elevationValue <= 0) {
-      this.elevationValue = 0;
-      this.drawInteractionService.sendElevationValue(this.elevationValue);
+      this.elevationValue = 0
+      this.drawInteractionService.sendElevationValue(this.elevationValue)
     }
   }
 
-  onElevValueChange(): void {
+  onElevValueChange (): void {
     if (this.elevationValue) {
-      this.drawInteractionService.sendElevationValue(this.elevationValue);
+      this.drawInteractionService.sendElevationValue(this.elevationValue)
     }
   }
-
 }

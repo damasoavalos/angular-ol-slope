@@ -1,25 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { ClearRunLinesButtonComponent } from './clear-run-lines-button.component';
+import { ClearRunLinesButtonComponent } from './clear-run-lines-button.component'
 
 describe('ClearRunLinesButtonComponent', () => {
-  let component: ClearRunLinesButtonComponent;
-  let fixture: ComponentFixture<ClearRunLinesButtonComponent>;
+  let component: ClearRunLinesButtonComponent
+  let fixture: ComponentFixture<ClearRunLinesButtonComponent>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ClearRunLinesButtonComponent ]
+      declarations: [ClearRunLinesButtonComponent]
     })
-    .compileComponents();
-  });
+      .compileComponents()
+  })
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ClearRunLinesButtonComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(ClearRunLinesButtonComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

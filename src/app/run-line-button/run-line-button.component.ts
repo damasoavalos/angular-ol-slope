@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import Control from 'ol/control/Control';
-import {DrawInteractionService} from '../draw-interaction.service';
+import { Component } from '@angular/core'
+import Control from 'ol/control/Control'
+import { type DrawInteractionService } from '../draw-interaction.service'
 
 @Component({
   selector: 'app-run-line-button',
@@ -8,14 +8,13 @@ import {DrawInteractionService} from '../draw-interaction.service';
   styleUrls: ['./run-line-button.component.css']
 })
 export class RunLineButtonComponent extends Control {
-
-  constructor(private drawInteractionService: DrawInteractionService) {
+  constructor (private readonly drawInteractionService: DrawInteractionService) {
     super({
       element: document.getElementById('run-line')
-    });
+    })
   }
 
-  onDrawRunLineClick(): void {
-    this.drawInteractionService.sendClickDrawRunLine();
+  onDrawRunLineClick (): void {
+    this.drawInteractionService.sendClickDrawRunLine()
   }
 }

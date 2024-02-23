@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
-import Control from 'ol/control/Control';
-import {DrawInteractionService} from '../draw-interaction.service';
-import {Subscription} from 'rxjs';
+import { Component } from '@angular/core'
+import Control from 'ol/control/Control'
+import { type DrawInteractionService } from '../draw-interaction.service'
+import { type Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-line-button',
@@ -10,19 +10,19 @@ import {Subscription} from 'rxjs';
 })
 
 export class LineButtonComponent extends Control {
-  LineButtonDisableEventSubscription: Subscription;
-  drawLineDisable: boolean;
+  LineButtonDisableEventSubscription: Subscription
+  drawLineDisable: boolean
 
-  constructor(private drawInteractionService: DrawInteractionService ) {
+  constructor (private readonly drawInteractionService: DrawInteractionService) {
     super({
       element: document.getElementById('draw-line')
-    });
+    })
     this.LineButtonDisableEventSubscription = this.drawInteractionService.getLineButtonDisable().subscribe((x) => {
-      this.drawLineDisable = x;
-    });
+      this.drawLineDisable = x
+    })
   }
 
-  onDrawLineClick(): void {
-    this.drawInteractionService.sendClickDrawLine();
+  onDrawLineClick (): void {
+    this.drawInteractionService.sendClickDrawLine()
   }
 }

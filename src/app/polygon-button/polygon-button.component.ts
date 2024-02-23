@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
-import Control from 'ol/control/Control';
-import {DrawInteractionService} from '../draw-interaction.service';
-import {Subscription} from 'rxjs';
+import { Component } from '@angular/core'
+import Control from 'ol/control/Control'
+import { type DrawInteractionService } from '../draw-interaction.service'
+import { type Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-polygon-button',
@@ -10,19 +10,19 @@ import {Subscription} from 'rxjs';
 })
 
 export class PolygonButtonComponent extends Control {
-  PolygonButtonDisableEventSubscription: Subscription;
-  drawPolygonDisable: boolean;
+  PolygonButtonDisableEventSubscription: Subscription
+  drawPolygonDisable: boolean
 
-  constructor(private drawInteractionService: DrawInteractionService ) {
+  constructor (private readonly drawInteractionService: DrawInteractionService) {
     super({
       element: document.getElementById('draw-polygon')
-    });
+    })
     this.PolygonButtonDisableEventSubscription = this.drawInteractionService.getPolygonButtonDisable().subscribe((x) => {
-      this.drawPolygonDisable = x;
-    });
+      this.drawPolygonDisable = x
+    })
   }
 
-  onDrawPolygonClick(): void {
-    this.drawInteractionService.sendClickDrawPolygon();
+  onDrawPolygonClick (): void {
+    this.drawInteractionService.sendClickDrawPolygon()
   }
 }
