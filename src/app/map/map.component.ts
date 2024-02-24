@@ -214,11 +214,11 @@ export class MapComponent implements OnInit {
     },
     '-' // this is a separator
     ]
-    const contextmenu = new ContextMenu({
-      width: 180,
-      defaultItems: true,
-      items: contextmenuItems
-    })
+    // const contextmenu = new ContextMenu({
+    //   width: 180,
+    //   defaultItems: true,
+    //   items: contextmenuItems
+    // })
 
     // LayerSwitcher
     const groupStyle: GroupSelectStyle = 'group'
@@ -228,7 +228,7 @@ export class MapComponent implements OnInit {
       startActive: false,
       activationMode: 'click'
     }
-    const layerSwitcher = new LayerSwitcher(opts)
+    // const layerSwitcher = new LayerSwitcher(opts)
 
     // Home button AKA ZoomToExtent
     const zoomToExtent = new ZoomToExtent({
@@ -243,9 +243,9 @@ export class MapComponent implements OnInit {
       new ElevationInputComponent(new DrawInteractionService()),
       new ClearRunLinesButtonComponent(new DrawInteractionService()),
       new ClearAllButtonComponent(new DrawInteractionService()),
-      layerSwitcher,
-      zoomToExtent,
-      contextmenu]
+      // layerSwitcher,
+      // contextmenu,
+      zoomToExtent]
 
     this.select = new Select()
     this.map = new Map({
@@ -259,21 +259,21 @@ export class MapComponent implements OnInit {
       })
     })
 
-    // making sure contextmenu open only on features select
-    contextmenu.on('beforeopen', (evt) => {
-      const feature = this.map.forEachFeatureAtPixel(evt.pixel, (ft) => {
-        return ft
-      })
-
-      if (feature) { // open only on features
-        // next line belong to contextmenu "delete" feature
-        this.selectedFeatureID = feature.getId()
-
-        contextmenu.enable()
-      } else {
-        contextmenu.disable()
-      }
-    })
+    // // making sure contextmenu open only on features select
+    // contextmenu.on('beforeopen', (evt) => {
+    //   const feature = this.map.forEachFeatureAtPixel(evt.pixel, (ft) => {
+    //     return ft
+    //   })
+    //
+    //   if (feature) { // open only on features
+    //     // next line belong to contextmenu "delete" feature
+    //     this.selectedFeatureID = feature.getId()
+    //     // contextmenu.enable()
+    //   }
+    //   // else {
+    //   //   contextmenu.disable()
+    //   // }
+    // })
   }
 
   addInteraction (geometryType: GeometryType, vectorSource: VectorSource<Feature<Geometry>>): void {

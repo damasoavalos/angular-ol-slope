@@ -7,6 +7,7 @@ import { DrawInteractionService } from '../draw-interaction.service'
   templateUrl: './elevation-input.component.html',
   styleUrls: ['./elevation-input.component.css']
 })
+
 export class ElevationInputComponent extends Control {
   constructor (private readonly drawInteractionService: DrawInteractionService) {
     super({

@@ -17,6 +17,7 @@
               "scripts": true,
               "styles": false
             },
+            "sourceMap": true,
             "outputPath": "dist/angular-ol-slope",
             "index": "src/index.html",
             "main": "src/main.ts",
