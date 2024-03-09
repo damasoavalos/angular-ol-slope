@@ -8,7 +8,7 @@ import { Component, type OnInit } from '@angular/core';
 import { defaults as defaultInteractions, Select, Draw } from 'ol/interaction';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import OSM from 'ol/source/OSM';
+// import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
@@ -17,7 +17,7 @@ import { Geometry } from 'ol/geom';
 import GroupLayer from 'ol/layer/Group';
 // import GeometryType from "ol/geom/GeometryType";
 import { defaults as defaultControls, ZoomToExtent } from 'ol/control';
-import ContextMenu from 'ol-contextmenu';
+// import ContextMenu from 'ol-contextmenu';
 import { LineButtonComponent } from '../line-button/line-button.component';
 import { PolygonButtonComponent } from '../polygon-button/polygon-button.component';
 import { OuterRingButtonComponent } from '../outer-ring-button/outer-ring-button.component';
@@ -29,14 +29,14 @@ import { DrawInteractionService } from '../draw-interaction.service';
 import { type Subscription } from 'rxjs';
 import { Fill, Stroke, Style } from 'ol/style';
 import { v4 as uuid } from 'uuid';
-import LayerSwitcher, { type Options as LsOptions, type GroupSelectStyle, type BaseLayerOptions, type GroupLayerOptions } from 'ol-layerswitcher';
-import { TileImage } from 'ol/source';
+// import LayerSwitcher, { type Options as LsOptions, type GroupSelectStyle, type BaseLayerOptions, type GroupLayerOptions } from 'ol-layerswitcher';
+// import { TileImage } from 'ol/source';
 import { type Extent, getCenter } from 'ol/extent';
 
 import XYZ from 'ol/source/XYZ';
 import { getRenderPixel } from 'ol/render';
-import { MapEvent } from 'ol';
 import RenderEvent from 'ol/render/Event';
+import {LayerSwipeComponent} from "../layer-swipe/layer-swipe.component";
 
 type GeometryType = 'Point' | 'LineString' | 'Polygon' | 'MultiPoint' | 'MultiLineString' | 'MultiPolygon' | 'Circle';
 
@@ -169,15 +169,34 @@ export class MapComponent implements OnInit {
     //   source: new TileImage({ url: 'http://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}' })
     // } as BaseLayerOptions)
 
+    const worldImagery = new TileLayer({
+      source: new XYZ({
+        url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        maxZoom: 19
+      })
+    });
+
     const googleSatelliteRoads = new TileLayer({
       source: new XYZ({
         url: `http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}`,
         maxZoom: 20,
       }),
-      // title: 'Google Satellite & Roads',
-      // type: 'base',
-      // visible: true,
-      // source: new TileImage({ url: 'http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}' })
+    });
+
+    const esriStandard = new TileLayer({
+      source: new XYZ({
+        attributions: 'Tiles © Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+        maxZoom: 20,
+      }),
+    });
+
+    const esriNatGeo = new TileLayer({
+      source: new XYZ({
+        attributions: 'Tiles © Esri — National Geographic, Esri, Garmin, HERE, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
+        url: 'https://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
+        maxZoom: 16,
+      }),
     });
 
     const googleTerrainRoads = new TileLayer({
@@ -187,11 +206,9 @@ export class MapComponent implements OnInit {
       }),
     });
 
-
     const baseMaps = new GroupLayer({
-      title: 'Base maps',
-      layers: [googleSatelliteRoads, googleTerrainRoads]
-    } as GroupLayerOptions)
+      layers: [esriNatGeo, googleSatelliteRoads]
+    })
 
     this.innerVectorSource = new VectorSource({ wrapX: false })
     const innerRingColor = 'rgba(79, 79, 79, 0.8)'
@@ -249,14 +266,14 @@ export class MapComponent implements OnInit {
     //   items: contextmenuItems
     // })
 
-    // LayerSwitcher
-    const groupStyle: GroupSelectStyle = 'group'
-    const opts: LsOptions = {
-      reverse: false,
-      groupSelectStyle: groupStyle,
-      startActive: false,
-      activationMode: 'click'
-    }
+    // // LayerSwitcher
+    // const groupStyle: GroupSelectStyle = 'group'
+    // const opts: LsOptions = {
+    //   reverse: false,
+    //   groupSelectStyle: groupStyle,
+    //   startActive: false,
+    //   activationMode: 'click'
+    // }
     // const layerSwitcher = new LayerSwitcher(opts)
 
     // Home button AKA ZoomToExtent
@@ -265,7 +282,8 @@ export class MapComponent implements OnInit {
     })
 
     // mapcontrols
-    const mapControls = [new LineButtonComponent(new DrawInteractionService()),
+    const mapControls = [
+      new LineButtonComponent(new DrawInteractionService()),
       new PolygonButtonComponent(new DrawInteractionService()),
       new OuterRingButtonComponent(new DrawInteractionService()),
       new RunLineButtonComponent(new DrawInteractionService()),
@@ -280,8 +298,7 @@ export class MapComponent implements OnInit {
     this.map = new Map({
       interactions: defaultInteractions({ doubleClickZoom: false }).extend([this.select]),
       controls: defaultControls().extend(mapControls),
-      // layers: [baseMaps, this.outerVectorLayer, this.innerVectorLayer, this.runLinesVectorLayer],
-      layers: [googleTerrainRoads, googleSatelliteRoads, this.outerVectorLayer, this.innerVectorLayer, this.runLinesVectorLayer],
+      layers: [baseMaps, this.outerVectorLayer, this.innerVectorLayer, this.runLinesVectorLayer],
       target: 'map',
       view: new View({
         center: getCenter(this.homeExtent),
@@ -293,7 +310,7 @@ export class MapComponent implements OnInit {
     const swipe = document.getElementById('swipe') as HTMLInputElement;
 
     // Event listener for the aerial layer's prerender event
-    googleTerrainRoads.on('prerender', (event: RenderEvent) => {
+    googleSatelliteRoads.on('prerender', (event: RenderEvent) => {
       const ctx = event.context as CanvasRenderingContext2D;
       const mapSize: [number, number] = this.map.getSize()! as [number, number];
       const width: number = mapSize[0] * (parseInt(swipe!.value) / 100);
@@ -313,7 +330,7 @@ export class MapComponent implements OnInit {
     });
 
     // Event listener for the aerial layer's postrender event
-    googleTerrainRoads.on('postrender', function (event: RenderEvent) {
+    googleSatelliteRoads.on('postrender', function (event: RenderEvent) {
       const ctx: CanvasRenderingContext2D = event.context  as CanvasRenderingContext2D;
       ctx.restore();
     });
