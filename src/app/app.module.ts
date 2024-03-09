@@ -12,6 +12,7 @@ import { RunLineButtonComponent } from './run-line-button/run-line-button.compon
 import { ClearRunLinesButtonComponent } from './clear-run-lines-button/clear-run-lines-button.component'
 import { ElevationInputComponent } from './elevation-input/elevation-input.component'
 import { FormsModule } from '@angular/forms'
+import {LayerSwipeComponent} from "./layer-swipe/layer-swipe.component";
 
 @NgModule({
   declarations: [
@@ -25,11 +26,12 @@ import { FormsModule } from '@angular/forms'
     ClearRunLinesButtonComponent,
     ElevationInputComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        LayerSwipeComponent
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -8,6 +8,7 @@ import { Component, type OnInit } from '@angular/core';
 import { defaults as defaultInteractions, Select, Draw } from 'ol/interaction';
 import Map from 'ol/Map';
 import View from 'ol/View';
+import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
@@ -31,6 +32,11 @@ import { v4 as uuid } from 'uuid';
 import LayerSwitcher, { type Options as LsOptions, type GroupSelectStyle, type BaseLayerOptions, type GroupLayerOptions } from 'ol-layerswitcher';
 import { TileImage } from 'ol/source';
 import { type Extent, getCenter } from 'ol/extent';
+
+import XYZ from 'ol/source/XYZ';
+import { getRenderPixel } from 'ol/render';
+import { MapEvent } from 'ol';
+import RenderEvent from 'ol/render/Event';
 
 type GeometryType = 'Point' | 'LineString' | 'Polygon' | 'MultiPoint' | 'MultiLineString' | 'MultiPolygon' | 'Circle';
 
@@ -94,6 +100,9 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit (): void {
+
+    console.log('aqui estamos');
+
     // ** extra basemaps, wanna keep it for now ** //
     // layers definition
     // const basemap = new TileLayer({
@@ -145,19 +154,39 @@ export class MapComponent implements OnInit {
     //   source: new TileImage({url: 'http://mt1.google.com/vt/lyrs=s&hl=pl&&x={x}&y={y}&z={z}'})
     // } as BaseLayerOptions);
 
+    // basemaps
+    // const googleSatelliteRoads = new TileLayer({
+    //   title: 'Google Satellite & Roads',
+    //   type: 'base',
+    //   visible: true,
+    //   source: new TileImage({ url: 'http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}' })
+    // } as BaseLayerOptions)
+
+    // const googleTerrainRoads = new TileLayer({
+    //   title: 'Google Terrain & Roads',
+    //   type: 'base',
+    //   visible: false,
+    //   source: new TileImage({ url: 'http://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}' })
+    // } as BaseLayerOptions)
+
     const googleSatelliteRoads = new TileLayer({
-      title: 'Google Satellite & Roads',
-      type: 'base',
-      visible: true,
-      source: new TileImage({ url: 'http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}' })
-    } as BaseLayerOptions)
+      source: new XYZ({
+        url: `http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}`,
+        maxZoom: 20,
+      }),
+      // title: 'Google Satellite & Roads',
+      // type: 'base',
+      // visible: true,
+      // source: new TileImage({ url: 'http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}' })
+    });
 
     const googleTerrainRoads = new TileLayer({
-      title: 'Google Terrain & Roads',
-      type: 'base',
-      visible: false,
-      source: new TileImage({ url: 'http://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}' })
-    } as BaseLayerOptions)
+      source: new XYZ({
+        url: `http://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}`,
+        maxZoom: 20,
+      }),
+    });
+
 
     const baseMaps = new GroupLayer({
       title: 'Base maps',
@@ -212,7 +241,7 @@ export class MapComponent implements OnInit {
       icon: deleteIcon,
       callback: () => { this.deleteFeature() }
     },
-    '-' // this is a separator
+      '-' // this is a separator
     ]
     // const contextmenu = new ContextMenu({
     //   width: 180,
@@ -251,13 +280,48 @@ export class MapComponent implements OnInit {
     this.map = new Map({
       interactions: defaultInteractions({ doubleClickZoom: false }).extend([this.select]),
       controls: defaultControls().extend(mapControls),
-      layers: [baseMaps, this.outerVectorLayer, this.innerVectorLayer, this.runLinesVectorLayer],
+      // layers: [baseMaps, this.outerVectorLayer, this.innerVectorLayer, this.runLinesVectorLayer],
+      layers: [googleTerrainRoads, googleSatelliteRoads, this.outerVectorLayer, this.innerVectorLayer, this.runLinesVectorLayer],
       target: 'map',
       view: new View({
         center: getCenter(this.homeExtent),
         zoom: 16.7
       })
     })
+
+    // Get the swipe element
+    const swipe = document.getElementById('swipe') as HTMLInputElement;
+
+    // Event listener for the aerial layer's prerender event
+    googleTerrainRoads.on('prerender', (event: RenderEvent) => {
+      const ctx = event.context as CanvasRenderingContext2D;
+      const mapSize: [number, number] = this.map.getSize()! as [number, number];
+      const width: number = mapSize[0] * (parseInt(swipe!.value) / 100);
+      const tl: [number, number] = getRenderPixel(event, [width, 0]) as [number, number];
+      const tr: [number, number] = getRenderPixel(event, [mapSize[0], 0]) as [number, number];
+      const bl: [number, number] = getRenderPixel(event, [width, mapSize[1]]) as [number, number];
+      const br: [number, number] = getRenderPixel(event, mapSize) as [number, number];
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(tl[0], tl[1]);
+      ctx.lineTo(bl[0], bl[1]);
+      ctx.lineTo(br[0], br[1]);
+      ctx.lineTo(tr[0], tr[1]);
+      ctx.closePath();
+      ctx.clip();
+    });
+
+    // Event listener for the aerial layer's postrender event
+    googleTerrainRoads.on('postrender', function (event: RenderEvent) {
+      const ctx: CanvasRenderingContext2D = event.context  as CanvasRenderingContext2D;
+      ctx.restore();
+    });
+
+    // Add event listener for swipe input
+    swipe!.addEventListener('input',  () => {
+      this.map.render();
+    });
 
     // // making sure contextmenu open only on features select
     // contextmenu.on('beforeopen', (evt) => {
